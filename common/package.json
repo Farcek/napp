@@ -11,6 +11,13 @@
   },
   "author": "farcek@gmail.com",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Farcek/napp.git"
+  },
+  "engines": {
+    "node": ">=6.10.2"
+  },
   "dependencies": {
     "reflect-metadata": "^0.1.12"
   },
