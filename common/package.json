@@ -1,13 +1,15 @@
 {
   "name": "@napp/common",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "node application common library",
   "main": "lib",
   "types": "lib",
   "scripts": {
     "tsc": "tsc",
     "tslint": "tslint -p tsconfig.json",
-    "test": "mocha --reporter spec --require ts-node/register  **/*.test.ts"
+    "pretest": "tsc",
+    "test": "mocha --reporter spec --require ts-node/register  **/*.test.ts",
+    "publish": "tsc && npm publish"
   },
   "author": "farcek@gmail.com",
   "license": "ISC",
@@ -19,7 +21,7 @@
     "node": ">=6.10.2"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "^0.1.12"    
   },
   "devDependencies": {
     "@types/chai": "^4.1.4",

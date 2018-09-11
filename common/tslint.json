@@ -22,7 +22,8 @@
         "no-console": false,
         "no-consecutive-blank-lines": false,
         "member-access": false,
-        "quotemark": false
+        "quotemark": false,
+        "no-namespace" : false
     },
     "rulesDirectory": []
 }

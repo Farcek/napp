@@ -1,3 +1,3 @@
-export interface ClassType extends FunctionConstructor {
+export interface ClassType {
     new(...args: any[]): any;
 }
