@@ -1,1 +1,1 @@
-export declare function initMetadata<T>(key: string, target: Object, defaultValue: T): T;
+export declare function initMetadata<T>(key: string, target: object, defaultValue: T): T;

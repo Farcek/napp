@@ -5,7 +5,6 @@ function initMetadata(key, target, defaultValue) {
     if (meta) {
         return meta;
     }
-    ;
     Reflect.defineMetadata(key, defaultValue, target);
     return defaultValue;
 }

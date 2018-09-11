@@ -1,21 +1,16 @@
-import { ClassType } from "../common";
-import { PropertyType, PropertyPrimaryType } from "./common";
+import { IMeta } from "./meta";
 
+export const $$MetakeyProperties = "design:properties";
 
-export const PropertyMetaName = "design:propery:name";
-export const PropertyMetaType = "design:propery:type";
+export class PropertiesMeta implements IMeta {
+    Level: number = 0;
+    Names: { [key: string]: boolean } = {};
 
-export const PropertyMetaIndex = "design:propery:index";
-export const PropertyMetaDescription = "design:propery:description";
-export const PropertyMetaGroup = "design:propery:group";
+    add(name: string) {
+        this.Names[name] = true;
+    }
 
-export const PropertyMetaKeys = "design:property:names[]";
-
-export interface IPropertyMeta {
-    Type: PropertyType;
-    Refrence: PropertyPrimaryType | ClassType;
-}
-export class PropertyMeta {
-    Type: PropertyType = PropertyType.Primary;
-    Refrence?: PropertyPrimaryType | ClassType;
+    map<U>(callbackfn: (properyVariableName: string) => U): U[] {
+        return Object.keys(this.Names).map(callbackfn);
+    }
 }
