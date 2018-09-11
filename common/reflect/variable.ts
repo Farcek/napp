@@ -39,4 +39,32 @@ export class VariableMeta implements IVariableMeta {
     eq(o: VariableMeta) {
         return o.Type === this.Type && o.Refrence === this.Refrence;
     }
+
+    typeName() {
+        if (this.Type === VariableType.Primitive) {
+            switch (this.Refrence) {
+                case VariablePrimitiveType.Boolean:
+                    return "boolean";
+                case VariablePrimitiveType.Date:
+                    return "date";
+                case VariablePrimitiveType.Float:
+                    return "float";
+                case VariablePrimitiveType.Int:
+                    return "int";
+                case VariablePrimitiveType.String:
+                    return "string";
+                case VariablePrimitiveType.Symbol:
+                    return "symbol";
+                case VariablePrimitiveType.Void:
+                    return "void";
+            }
+            return "null";
+        }
+
+        return (this.Refrence as ClassType).name;
+    }
+
+    toString() {
+        return `VariableMeta(${this.Type === VariableType.Primitive ? "Primitive" : "Complex"}, ${this.typeName()}, ${this.Level})`;
+    }
 }

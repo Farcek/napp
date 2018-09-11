@@ -27,4 +27,6 @@ export declare class VariableMeta implements IVariableMeta {
     Refrence: VariablePrimitiveType | ClassType;
     constructor(type: VariableType, ref: VariablePrimitiveType | ClassType);
     eq(o: VariableMeta): boolean;
+    typeName(): string;
+    toString(): string;
 }

@@ -17,6 +17,15 @@ const property_decorator_1 = require("./property.decorator");
 const variable_decorator_1 = require("./variable.decorator");
 const variable_helper_1 = require("./variable.helper");
 const variable_1 = require("./variable");
+class FooClass {
+    constructor() {
+        this.int1 = 0;
+    }
+}
+__decorate([
+    property_decorator_1.Property(),
+    __metadata("design:type", Number)
+], FooClass.prototype, "int1", void 0);
 class BarClass {
 }
 __decorate([
@@ -29,7 +38,7 @@ __decorate([
 ], BarClass.prototype, "str2", void 0);
 __decorate([
     variable_decorator_1.Type(String),
-    __metadata("design:type", String)
+    __metadata("design:type", Object)
 ], BarClass.prototype, "str3", void 0);
 __decorate([
     property_decorator_1.Property({ type: "string" }),
@@ -110,6 +119,17 @@ let VariableTestClass = class VariableTestClass {
         chai_1.assert.equal(m && m.Type, variable_1.VariableType.Primitive, "check Any class - Type");
         chai_1.assert.equal(m && m.Refrence, variable_1.VariablePrimitiveType.String, " check Any class - Refrence");
     }
+    decratorStr3() {
+        let m = variable_helper_1.ReflectVariable.getVariableMeta(BarClass, "str3");
+        console.log(m);
+        chai_1.assert.equal(m && m.Type, variable_1.VariableType.Primitive, "check Any class - Type");
+        chai_1.assert.equal(m && m.Refrence, variable_1.VariablePrimitiveType.String, " check Any class - Refrence");
+    }
+    decratorNumber() {
+        let m = variable_helper_1.ReflectVariable.getVariableMeta(FooClass, "int1");
+        chai_1.assert.equal(m && m.Type, variable_1.VariableType.Primitive, "check FooClass.int1 - Type");
+        chai_1.assert.equal(m && m.Refrence, variable_1.VariablePrimitiveType.Int, "check FooClass.int1 - Refrence");
+    }
 };
 __decorate([
     mocha_typescript_1.test,
@@ -129,8 +149,22 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], VariableTestClass.prototype, "decratorStr1", null);
+__decorate([
+    mocha_typescript_1.test,
+    mocha_typescript_1.only,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], VariableTestClass.prototype, "decratorStr3", null);
+__decorate([
+    mocha_typescript_1.test,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], VariableTestClass.prototype, "decratorNumber", null);
 VariableTestClass = __decorate([
-    mocha_typescript_1.suite
+    mocha_typescript_1.suite,
+    mocha_typescript_1.only
 ], VariableTestClass);
 exports.VariableTestClass = VariableTestClass;
 //# sourceMappingURL=variable.test.js.map

@@ -35,11 +35,14 @@ var ReflectVariable;
     }
     ReflectVariable.factoryVariableMeta = factoryVariableMeta;
     function setVariableMeta(meta, target, propertyKey) {
+        console.log("setVariableMeta ", target, propertyKey, meta);
         return meta_1.ReflectMeta.SetMeta(variable_decorator_1.$$MetakeyVariable, meta, target, propertyKey);
     }
     ReflectVariable.setVariableMeta = setVariableMeta;
     function getVariableMeta(target, propertyKey) {
-        let m = meta_1.ReflectMeta.GetMeta(variable_decorator_1.$$MetakeyVariable, target.constructor, propertyKey);
+        let m = meta_1.ReflectMeta.GetMeta(variable_decorator_1.$$MetakeyVariable, target, propertyKey);
+        console.log("getVariableMeta ", target, propertyKey);
+        console.log(111111, m);
         if (m && m instanceof variable_1.VariableMeta) {
             return m;
         }

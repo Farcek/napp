@@ -1,6 +1,6 @@
 {
   "name": "@napp/common",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "node application common library",
   "main": "lib",
   "types": "lib",
@@ -9,7 +9,7 @@
     "tslint": "tslint -p tsconfig.json",
     "pretest": "tsc",
     "test": "mocha --reporter spec --require ts-node/register  **/*.test.ts",
-    "publish": "tsc && npm publish"
+    "npm2push": "tsc && npm publish"
   },
   "author": "farcek@gmail.com",
   "license": "ISC",

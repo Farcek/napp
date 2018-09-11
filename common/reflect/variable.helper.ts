@@ -49,7 +49,7 @@ export namespace ReflectVariable {
     }
 
     export function getVariableMeta(target: ClassType, propertyKey: string) {
-        let m = ReflectMeta.GetMeta<IVariableMeta>($$MetakeyVariable, target.constructor as ClassType, propertyKey);
+        let m = ReflectMeta.GetMeta<VariableMeta>($$MetakeyVariable, target, propertyKey);
         if (m && m instanceof VariableMeta) {
             return m;
         }

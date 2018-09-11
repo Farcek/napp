@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { suite, test } from "mocha-typescript";
+import { suite, test, only } from "mocha-typescript";
 import { assert } from "chai";
 import { NameDecorator } from "./name.decorator";
 import { Property } from "./property.decorator";
@@ -11,7 +11,10 @@ import { VariableType, VariablePrimitiveType } from "./variable";
 import { ReflectMeta } from "./meta";
 
 
-
+class FooClass {
+    @Property()
+    int1: number = 0;
+}
 
 class BarClass {
 
@@ -22,7 +25,7 @@ class BarClass {
     str2?: string;
 
     @Type(String)
-    str3?: string;
+    str3: any;
 
     @Property({ type: "string" })
     str4?: any;
@@ -33,6 +36,7 @@ class BarClass {
 }
 
 @suite
+@only
 export class VariableTestClass {
 
     @test
@@ -122,6 +126,21 @@ export class VariableTestClass {
         let m = ReflectVariable.getVariableMeta(BarClass, "str1");
         assert.equal(m && m.Type, VariableType.Primitive, "check Any class - Type");
         assert.equal(m && m.Refrence, VariablePrimitiveType.String, " check Any class - Refrence");
+    }
+
+    @test
+    @only
+    decratorStr3() {
+        let m = ReflectVariable.getVariableMeta(BarClass, "str3");
+        console.log(m);
+        assert.equal(m && m.Type, VariableType.Primitive, "check Any class - Type");
+        assert.equal(m && m.Refrence, VariablePrimitiveType.String, " check Any class - Refrence");
+    }
+    @test
+    decratorNumber() {
+        let m = ReflectVariable.getVariableMeta(FooClass, "int1");
+        assert.equal(m && m.Type, VariableType.Primitive, "check FooClass.int1 - Type");
+        assert.equal(m && m.Refrence, VariablePrimitiveType.Int, "check FooClass.int1 - Refrence");
     }
 
 }
