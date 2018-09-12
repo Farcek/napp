@@ -8,7 +8,7 @@ const property_helper_1 = require("./property.helper");
 const description_helper_1 = require("./description.helper");
 const description_meta_1 = require("./description.meta");
 function PropertyDecorator(options) {
-    return (target, propertyKey) => {
+    return (target, propertyKey, descriptor) => {
         property_helper_1.ReflectProperty.GetProperiesMeta(target.constructor).add(propertyKey);
         // name meta
         let propertyName = options && options.name || propertyKey;

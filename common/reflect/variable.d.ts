@@ -1,32 +1,40 @@
 import { ClassType } from "../common";
 import { IMeta } from "./meta";
-export declare enum VariableType {
-    /**
-     * Propery type int, long , string, bool, float, double, date
-     */
-    Primitive = 1,
-    Complex = 2
-}
 export declare enum VariablePrimitiveType {
     Void = 1,
     Int = 2,
     Float = 3,
     String = 4,
-    Symbol = 5,
-    Boolean = 6,
-    Date = 7
+    Boolean = 5,
+    Date = 6,
+    Array = 7,
+    Custom = 8
 }
-export declare type VariableTypes = "string" | StringConstructor | "int" | "float" | NumberConstructor | "symbol" | SymbolConstructor | "boolean" | BooleanConstructor | "date" | DateConstructor | ClassType;
+export declare type VariableTypes = "string" | StringConstructor | "int" | "float" | NumberConstructor | "boolean" | BooleanConstructor | "date" | DateConstructor | ClassType;
 export interface IVariableMeta extends IMeta {
-    Type: VariableType;
-    Refrence: VariablePrimitiveType | ClassType;
+    readonly Type: VariablePrimitiveType;
+    readonly TypeName: string;
+    readonly TypeRef: ClassType;
+    readonly IsArray: boolean;
+    readonly ArrayElement?: VariableMeta;
+    readonly IsPrimary: boolean;
+}
+export interface IOptionsVariableMeta {
+    level: number;
+    type: VariablePrimitiveType;
+    typeName: string;
+    typeRef: ClassType;
+    isArray?: boolean;
+    arrayElement?: VariableMeta;
+    IsPrimary: boolean;
 }
 export declare class VariableMeta implements IVariableMeta {
-    Level: number;
-    Type: VariableType;
-    Refrence: VariablePrimitiveType | ClassType;
-    constructor(type: VariableType, ref: VariablePrimitiveType | ClassType);
-    eq(o: VariableMeta): boolean;
-    typeName(): string;
-    toString(): string;
+    readonly Level: number;
+    readonly Type: VariablePrimitiveType;
+    readonly TypeName: string;
+    readonly TypeRef: ClassType;
+    readonly IsArray: boolean;
+    readonly ArrayElement?: VariableMeta;
+    readonly IsPrimary: boolean;
+    constructor(options: IOptionsVariableMeta);
 }

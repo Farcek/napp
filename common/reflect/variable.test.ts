@@ -2,18 +2,53 @@ import "reflect-metadata";
 
 import { suite, test, only } from "mocha-typescript";
 import { assert } from "chai";
-import { NameDecorator } from "./name.decorator";
+import { NameDecorator, Name } from "./name.decorator";
 import { Property } from "./property.decorator";
 import { ReflectProperty } from "./property.helper";
 import { Type } from "./variable.decorator";
 import { ReflectVariable } from "./variable.helper";
-import { VariableType, VariablePrimitiveType } from "./variable";
+import { VariablePrimitiveType } from "./variable";
 import { ReflectMeta } from "./meta";
 
 
-class FooClass {
+
+@Name("aa")
+class FooClass<T> {
+
+
+    constructor(public as: string) {
+
+    }
     @Property()
     int1: number = 0;
+
+    @Property()
+    t1!: Promise<string>;
+
+    @Property()
+    a1: string[] = [];
+
+    @Property()
+    a2?: string[];
+
+
+    @Property()
+    m1(a: string, b: number[]): string {
+        console.log(1);
+        return "";
+    }
+
+    m2(...a: string[]) {
+        console.log(1);
+    }
+
+
+
+    @Property()
+    t2?: Promise<string>;
+
+    @Property()
+    t3?: Promise<T>;
 }
 
 class BarClass {
@@ -33,82 +68,60 @@ class BarClass {
     @Type(String)
     @Property({ type: "int" })
     str5?: any;
+
+
 }
 
 @suite
-@only
 export class VariableTestClass {
 
     @test
     factoryVariableMetaAsPrimitive() {
         {
             let m = ReflectVariable.factoryVariableMeta(String);
-            assert.equal(m.Type, VariableType.Primitive, " check String - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.String, " check String - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.String, "check String");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta("string");
-            assert.equal(m.Type, VariableType.Primitive, " check string - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.String, " check string - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.String, "check String");
         }
 
 
         {
             let m = ReflectVariable.factoryVariableMeta(Number);
-            assert.equal(m.Type, VariableType.Primitive, " check Number - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Int, " check Number - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Int, "check int");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta("int");
-            assert.equal(m.Type, VariableType.Primitive, " check int - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Int, " check int - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Int, "check int");
         }
-
-
 
         {
             let m = ReflectVariable.factoryVariableMeta("float");
-            assert.equal(m.Type, VariableType.Primitive, " check float - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Float, " check float - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Float, "check float");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta(Boolean);
-            assert.equal(m.Type, VariableType.Primitive, " check Boolean - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Boolean, " check Boolean - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Boolean, "check bool");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta("boolean");
-            assert.equal(m.Type, VariableType.Primitive, " check boolean - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Boolean, " check boolean - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Boolean, "check bool");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta(Date);
-            assert.equal(m.Type, VariableType.Primitive, " check Date - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Date, " check Date - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Date, "check date");
         }
 
         {
             let m = ReflectVariable.factoryVariableMeta("date");
-            assert.equal(m.Type, VariableType.Primitive, " check date - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Date, " check date - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Date, "check date");
         }
-
-        {
-            let m = ReflectVariable.factoryVariableMeta(Symbol);
-            assert.equal(m.Type, VariableType.Primitive, " check Symbol - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Symbol, " check Symbol - Refrence");
-        }
-        {
-            let m = ReflectVariable.factoryVariableMeta("symbol");
-            assert.equal(m.Type, VariableType.Primitive, " check symbol - Type");
-            assert.equal(m.Refrence, VariablePrimitiveType.Symbol, " check symbol - Refrence");
-        }
-
 
     }
 
@@ -116,31 +129,32 @@ export class VariableTestClass {
     factoryVariableMetaAsComplex() {
         {
             let m = ReflectVariable.factoryVariableMeta(BarClass);
-            assert.equal(m.Type, VariableType.Complex, "check Any class - Type");
-            assert.equal(m.Refrence, BarClass, " check Any class - Refrence");
+            assert.equal(m.Type, VariablePrimitiveType.Custom, "check Any class - Type");
+            assert.equal(m.TypeName, "BarClass", " check Any class - typename");
+            assert.equal(m.TypeRef, BarClass, " check Any class - Refrence");
         }
     }
 
     @test
     decratorStr1() {
         let m = ReflectVariable.getVariableMeta(BarClass, "str1");
-        assert.equal(m && m.Type, VariableType.Primitive, "check Any class - Type");
-        assert.equal(m && m.Refrence, VariablePrimitiveType.String, " check Any class - Refrence");
+        assert.equal(m && m.Type, VariablePrimitiveType.String, "check Any class - Type");
+        assert.equal(m && m.TypeRef, String, " check Any class - Refrence");
     }
 
-    @test
-    @only
+    @test    
     decratorStr3() {
         let m = ReflectVariable.getVariableMeta(BarClass, "str3");
         console.log(m);
-        assert.equal(m && m.Type, VariableType.Primitive, "check Any class - Type");
-        assert.equal(m && m.Refrence, VariablePrimitiveType.String, " check Any class - Refrence");
+        assert.equal(m && m.Type, VariablePrimitiveType.String, "check Any class - Type");
+        assert.equal(m && m.TypeRef, String, " check Any class - Refrence");
     }
     @test
     decratorNumber() {
         let m = ReflectVariable.getVariableMeta(FooClass, "int1");
-        assert.equal(m && m.Type, VariableType.Primitive, "check FooClass.int1 - Type");
-        assert.equal(m && m.Refrence, VariablePrimitiveType.Int, "check FooClass.int1 - Refrence");
+        assert.equal(m && m.Type, VariablePrimitiveType.Int, "check FooClass.int1 - Type");
+        assert.equal(m && m.TypeRef, Number, "check FooClass.int1 - Refrence");
+        assert.equal(m && m.TypeName, "int", "check FooClass.int1 - Typename");
     }
 
 }

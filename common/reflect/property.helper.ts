@@ -1,5 +1,4 @@
 
-import { VariableType, VariablePrimitiveType, VariableTypes, VariableMeta } from "./variable";
 import { ClassType } from "../common";
 import { initMetadata } from "./helper";
 import { $$MetakeyProperties, PropertiesMeta } from "./property.meta";

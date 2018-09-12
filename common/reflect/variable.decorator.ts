@@ -7,13 +7,11 @@ import { MetaLevel } from "./meta";
 export const $$MetakeyVariable = "design:variable";
 
 
-export function VariableDecorator(type: VariableTypes) {
+export function VariableDecorator(type: VariableTypes, isArray?: boolean) {
     return (target: object, propertyKey: string) => {
         ReflectProperty.GetProperiesMeta(target.constructor as ClassType).add(propertyKey);
 
-        let variableMeta = ReflectVariable.factoryVariableMeta(type);
-        variableMeta.Level = MetaLevel.Level2;
-        
+        let variableMeta = ReflectVariable.factoryVariableMeta(type, MetaLevel.Level2);
         ReflectVariable.setVariableMeta(variableMeta, target.constructor as ClassType, propertyKey);
     };
 }

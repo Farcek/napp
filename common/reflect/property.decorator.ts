@@ -30,7 +30,7 @@ export interface IPropertyDecorator {
     type?: VariableTypes;
 }
 export function PropertyDecorator(options?: IPropertyDecorator) {
-    return (target: object, propertyKey: string) => {
+    return (target: object, propertyKey: string, descriptor?: PropertyDescriptor) => {
 
         ReflectProperty.GetProperiesMeta(target.constructor as ClassType).add(propertyKey);
 

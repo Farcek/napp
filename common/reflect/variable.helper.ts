@@ -1,47 +1,99 @@
 
-import { VariableType, VariablePrimitiveType, VariableTypes, VariableMeta, IVariableMeta } from "./variable";
+import { VariablePrimitiveType, VariableTypes, VariableMeta, IVariableMeta } from "./variable";
 import { ClassType } from "../common";
 import { $$MetakeyVariable } from "./variable.decorator";
-import { ReflectMeta } from "./meta";
+import { ReflectMeta, MetaLevel } from "./meta";
 
 export namespace ReflectVariable {
 
-    function buildVariableMetaAsPrimitive(type: VariablePrimitiveType) {
-        return new VariableMeta(VariableType.Primitive, type);
+    export function factoryVariableMetaArray(elementType: IVariableMeta, level?: number): VariableMeta {
+        return new VariableMeta({
+            type: VariablePrimitiveType.String,
+            typeName: "string",
+            typeRef: Array,
+            IsPrimary: false,
+            level: level || MetaLevel.Level0,
+            isArray: true,
+            arrayElement: elementType
+        });
     }
-
-    export function factoryVariableMeta(type: VariableTypes): VariableMeta {
+    export function factoryVariableMeta(type: VariableTypes, level?: number): VariableMeta {
 
         if (type) {
-            // is primary
             if (type === String || type === "string") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.String);
+                return new VariableMeta({
+                    type: VariablePrimitiveType.String,
+                    typeName: "string",
+                    typeRef: String,
+                    IsPrimary: true,
+                    level: level || MetaLevel.Level0,
+                    isArray: false
+                });
             }
 
             if (type === Number || type === "int") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.Int);
+                return new VariableMeta({
+                    type: VariablePrimitiveType.Int,
+                    typeName: "int",
+                    typeRef: Number,
+                    IsPrimary: true,
+                    level: level || MetaLevel.Level0,
+                    isArray: false
+                });
             }
 
             if (type === "float") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.Float);
+                return new VariableMeta({
+                    type: VariablePrimitiveType.Float,
+                    typeName: "float",
+                    typeRef: Number,
+                    IsPrimary: true,
+                    level: level || MetaLevel.Level0,
+                    isArray: false
+                });
             }
 
-            if (type === Symbol || type === "symbol") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.Symbol);
-            }
+
 
             if (type === Boolean || type === "boolean") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.Boolean);
+                return new VariableMeta({
+                    type: VariablePrimitiveType.Boolean,
+                    typeName: "boolean",
+                    typeRef: Boolean,
+                    IsPrimary: true,
+                    level: level || MetaLevel.Level0,
+                    isArray: false
+                });
             }
             if (type === Date || type === "date") {
-                return buildVariableMetaAsPrimitive(VariablePrimitiveType.Date);
+                return new VariableMeta({
+                    type: VariablePrimitiveType.Date,
+                    typeName: "date",
+                    typeRef: Date,
+                    IsPrimary: true,
+                    level: level || MetaLevel.Level0,
+                    isArray: false
+                });
             }
 
-            return new VariableMeta(VariableType.Complex, type as ClassType);
-
+            return new VariableMeta({
+                type: VariablePrimitiveType.Custom,
+                typeName: type.name,
+                typeRef: type,
+                IsPrimary: true,
+                level: level || MetaLevel.Level0,
+                isArray: false
+            });
         }
 
-        return new VariableMeta(VariableType.Primitive, VariablePrimitiveType.Void);
+        return new VariableMeta({
+            type: VariablePrimitiveType.Void,
+            typeName: "void",
+            typeRef: Error,
+            IsPrimary: true,
+            level: level || MetaLevel.Level0,
+            isArray: false
+        });
     }
 
     export function setVariableMeta(meta: IVariableMeta, target: ClassType, propertyKey: string): boolean {
