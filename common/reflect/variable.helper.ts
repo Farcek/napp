@@ -8,8 +8,8 @@ export namespace ReflectVariable {
 
     export function factoryVariableMetaArray(elementType: IVariableMeta, level?: number): VariableMeta {
         return new VariableMeta({
-            type: VariablePrimitiveType.String,
-            typeName: "string",
+            type: VariablePrimitiveType.Array,
+            typeName: "array",
             typeRef: Array,
             IsPrimary: false,
             level: level || MetaLevel.Level0,
@@ -80,7 +80,7 @@ export namespace ReflectVariable {
                 type: VariablePrimitiveType.Custom,
                 typeName: type.name,
                 typeRef: type,
-                IsPrimary: true,
+                IsPrimary: false,
                 level: level || MetaLevel.Level0,
                 isArray: false
             });

@@ -70,6 +70,12 @@ class BarClass {
     str5?: any;
 
 
+    @Type(String, true)
+    arr1?: any;
+
+
+    @Type(Date, true)
+    arr2?: FooClass<number>[];
 }
 
 @suite
@@ -142,7 +148,7 @@ export class VariableTestClass {
         assert.equal(m && m.TypeRef, String, " check Any class - Refrence");
     }
 
-    @test    
+    @test
     decratorStr3() {
         let m = ReflectVariable.getVariableMeta(BarClass, "str3");
         console.log(m);
@@ -155,6 +161,14 @@ export class VariableTestClass {
         assert.equal(m && m.Type, VariablePrimitiveType.Int, "check FooClass.int1 - Type");
         assert.equal(m && m.TypeRef, Number, "check FooClass.int1 - Refrence");
         assert.equal(m && m.TypeName, "int", "check FooClass.int1 - Typename");
+    }
+
+    @test
+    decratorArray() {
+        let m = ReflectVariable.getVariableMeta(BarClass, "arr1");
+        assert.equal(m && m.Type, VariablePrimitiveType.Array, "check BarClass.arr1 - Type");
+        assert.equal(m && m.TypeRef, Array, "check BarClass.arr1 - Refrence");
+        assert.equal(m && m.IsArray, true, "check BarClass.arr1 - isArray");
     }
 
 }

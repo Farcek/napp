@@ -7,8 +7,8 @@ var ReflectVariable;
 (function (ReflectVariable) {
     function factoryVariableMetaArray(elementType, level) {
         return new variable_1.VariableMeta({
-            type: variable_1.VariablePrimitiveType.String,
-            typeName: "string",
+            type: variable_1.VariablePrimitiveType.Array,
+            typeName: "array",
             typeRef: Array,
             IsPrimary: false,
             level: level || meta_1.MetaLevel.Level0,
@@ -73,7 +73,7 @@ var ReflectVariable;
                 type: variable_1.VariablePrimitiveType.Custom,
                 typeName: type.name,
                 typeRef: type,
-                IsPrimary: true,
+                IsPrimary: false,
                 level: level || meta_1.MetaLevel.Level0,
                 isArray: false
             });

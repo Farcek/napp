@@ -62,6 +62,7 @@ export class VariableMeta implements IVariableMeta {
     }
 
 
+   
 
     // typeName() {
     //     if (this.Type === VariableType.Primitive) {

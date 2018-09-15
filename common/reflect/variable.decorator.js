@@ -8,7 +8,13 @@ function VariableDecorator(type, isArray) {
     return (target, propertyKey) => {
         property_helper_1.ReflectProperty.GetProperiesMeta(target.constructor).add(propertyKey);
         let variableMeta = variable_helper_1.ReflectVariable.factoryVariableMeta(type, meta_1.MetaLevel.Level2);
-        variable_helper_1.ReflectVariable.setVariableMeta(variableMeta, target.constructor, propertyKey);
+        if (isArray) {
+            let arrayMeta = variable_helper_1.ReflectVariable.factoryVariableMetaArray(variableMeta, meta_1.MetaLevel.Level2);
+            variable_helper_1.ReflectVariable.setVariableMeta(arrayMeta, target.constructor, propertyKey);
+        }
+        else {
+            variable_helper_1.ReflectVariable.setVariableMeta(variableMeta, target.constructor, propertyKey);
+        }
     };
 }
 exports.VariableDecorator = VariableDecorator;

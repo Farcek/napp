@@ -12,7 +12,13 @@ export function VariableDecorator(type: VariableTypes, isArray?: boolean) {
         ReflectProperty.GetProperiesMeta(target.constructor as ClassType).add(propertyKey);
 
         let variableMeta = ReflectVariable.factoryVariableMeta(type, MetaLevel.Level2);
-        ReflectVariable.setVariableMeta(variableMeta, target.constructor as ClassType, propertyKey);
+        if (isArray) {
+            let arrayMeta = ReflectVariable.factoryVariableMetaArray(variableMeta, MetaLevel.Level2);
+            ReflectVariable.setVariableMeta(arrayMeta, target.constructor as ClassType, propertyKey);
+        } else {
+            ReflectVariable.setVariableMeta(variableMeta, target.constructor as ClassType, propertyKey);
+        }
+
     };
 }
 
