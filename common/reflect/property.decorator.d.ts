@@ -8,6 +8,7 @@ export interface IPropertyDecorator {
     name?: string;
     description?: string;
     type?: VariableTypes;
+    isArray?: boolean;
 }
 export declare function PropertyDecorator(options?: IPropertyDecorator): (target: object, propertyKey: string, descriptor?: PropertyDescriptor | undefined) => void;
 export declare const Property: typeof PropertyDecorator;

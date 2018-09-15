@@ -28,6 +28,7 @@ export interface IPropertyDecorator {
     // index?: number;
 
     type?: VariableTypes;
+    isArray?: boolean;
 }
 export function PropertyDecorator(options?: IPropertyDecorator) {
     return (target: object, propertyKey: string, descriptor?: PropertyDescriptor) => {
@@ -42,7 +43,7 @@ export function PropertyDecorator(options?: IPropertyDecorator) {
 
 
         if (options && options.description) {
-            let desc = new DescriptionMeta( options.description, MetaLevel.Level1);
+            let desc = new DescriptionMeta(options.description, MetaLevel.Level1);
             ReflectDescription.setMeta(desc, target.constructor as ClassType, propertyKey);
         }
 
@@ -56,7 +57,13 @@ export function PropertyDecorator(options?: IPropertyDecorator) {
 
         if (options && options.type) {
             let variableMeta = ReflectVariable.factoryVariableMeta(options.type);
-            ReflectVariable.setVariableMeta(variableMeta, target.constructor as ClassType, propertyKey);
+
+            if (options.isArray) {
+                let arrMeta = ReflectVariable.factoryVariableMetaArray(variableMeta);
+                ReflectVariable.setVariableMeta(arrMeta, target.constructor as ClassType, propertyKey);
+            } else {
+                ReflectVariable.setVariableMeta(variableMeta, target.constructor as ClassType, propertyKey);
+            }            
         }
 
     };

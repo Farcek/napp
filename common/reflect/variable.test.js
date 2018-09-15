@@ -93,7 +93,7 @@ __decorate([
     __metadata("design:type", Object)
 ], BarClass.prototype, "arr1", void 0);
 __decorate([
-    variable_decorator_1.Type(Date, true),
+    property_decorator_1.Property({ type: FooClass, isArray: true }),
     __metadata("design:type", Array)
 ], BarClass.prototype, "arr2", void 0);
 let VariableTestClass = class VariableTestClass {
@@ -166,6 +166,13 @@ let VariableTestClass = class VariableTestClass {
         chai_1.assert.equal(m && m.TypeRef, Array, "check BarClass.arr1 - Refrence");
         chai_1.assert.equal(m && m.IsArray, true, "check BarClass.arr1 - isArray");
     }
+    decratorArray2() {
+        let m = variable_helper_1.ReflectVariable.getVariableMeta(BarClass, "arr2");
+        chai_1.assert.equal(m && m.Type, variable_1.VariablePrimitiveType.Array, "check BarClass.arr2 - Type");
+        chai_1.assert.equal(m && m.TypeRef, Array, "check BarClass.arr2 - Refrence");
+        chai_1.assert.equal(m && m.IsArray, true, "check BarClass.arr2 - isArray");
+        chai_1.assert.equal(m && m.ArrayElement && m.ArrayElement.TypeRef, FooClass, "check BarClass.arr2 - array element");
+    }
 };
 __decorate([
     mocha_typescript_1.test,
@@ -203,6 +210,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], VariableTestClass.prototype, "decratorArray", null);
+__decorate([
+    mocha_typescript_1.test,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], VariableTestClass.prototype, "decratorArray2", null);
 VariableTestClass = __decorate([
     mocha_typescript_1.suite
 ], VariableTestClass);

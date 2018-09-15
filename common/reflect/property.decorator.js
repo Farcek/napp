@@ -26,7 +26,13 @@ function PropertyDecorator(options) {
         // }
         if (options && options.type) {
             let variableMeta = variable_helper_1.ReflectVariable.factoryVariableMeta(options.type);
-            variable_helper_1.ReflectVariable.setVariableMeta(variableMeta, target.constructor, propertyKey);
+            if (options.isArray) {
+                let arrMeta = variable_helper_1.ReflectVariable.factoryVariableMetaArray(variableMeta);
+                variable_helper_1.ReflectVariable.setVariableMeta(arrMeta, target.constructor, propertyKey);
+            }
+            else {
+                variable_helper_1.ReflectVariable.setVariableMeta(variableMeta, target.constructor, propertyKey);
+            }
         }
     };
 }

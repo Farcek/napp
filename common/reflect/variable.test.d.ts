@@ -6,4 +6,5 @@ export declare class VariableTestClass {
     decratorStr3(): void;
     decratorNumber(): void;
     decratorArray(): void;
+    decratorArray2(): void;
 }
