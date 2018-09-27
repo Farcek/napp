@@ -11,7 +11,7 @@ var MetaLevel;
 var ReflectMeta;
 (function (ReflectMeta) {
     function SetMeta($$metaname, meta, target, propertyKey) {
-        let old = Reflect.getMetadata($$metaname, target.prototype, propertyKey);
+        let old = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey);
         if (!old || (old && old.Level <= meta.Level)) {
             Reflect.defineMetadata($$metaname, meta, target.prototype, propertyKey);
             return true;
@@ -20,7 +20,7 @@ var ReflectMeta;
     }
     ReflectMeta.SetMeta = SetMeta;
     function GetMeta($$metaname, target, propertyKey) {
-        let m = Reflect.getMetadata($$metaname, target.prototype, propertyKey);
+        let m = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey);
         if (m) {
             return m;
         }

@@ -17,7 +17,7 @@ export namespace ReflectMeta {
 
 
     export function SetMeta($$metaname: string, meta: IMeta, target: ClassType, propertyKey?: string): boolean {
-        let old: IMeta | null = Reflect.getMetadata($$metaname, target.prototype, propertyKey as any);
+        let old: IMeta | null = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey as any);
         if (!old || (old && old.Level <= meta.Level)) {
             Reflect.defineMetadata($$metaname, meta, target.prototype, propertyKey as any);
             return true;
@@ -26,7 +26,7 @@ export namespace ReflectMeta {
     }
 
     export function GetMeta<T>($$metaname: string, target: ClassType, propertyKey?: string): T | null {
-        let m = Reflect.getMetadata($$metaname, target.prototype, propertyKey as any);
+        let m = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey as any);
         if (m) {
             return m;
         }

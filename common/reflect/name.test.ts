@@ -15,7 +15,7 @@ class Foo1Class {
     pp?: string;
 }
 
-class Foo2Class {
+class Foo2Class extends Foo1Class {
 
     @NameDecorator("fullname")
     pp?: string;
