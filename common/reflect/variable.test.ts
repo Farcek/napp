@@ -75,7 +75,7 @@ class BarClass {
 
 
     @Property({ type: FooClass, isArray: true })
-    arr2?: FooClass<any>[];
+    arr2?: FooClass<number>[];
 }
 
 @suite
@@ -150,7 +150,8 @@ export class VariableTestClass {
 
     @test
     decratorStr3() {
-        let m = ReflectVariable.getVariableMeta(BarClass, "str3");        
+        let m = ReflectVariable.getVariableMeta(BarClass, "str3");
+       
         assert.equal(m && m.Type, VariablePrimitiveType.String, "check Any class - Type");
         assert.equal(m && m.TypeRef, String, " check Any class - Refrence");
     }

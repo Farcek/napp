@@ -20,7 +20,7 @@ let Foo1Class = class Foo1Class {
 Foo1Class = __decorate([
     name_decorator_1.Name("Foo 1 class")
 ], Foo1Class);
-class Foo2Class {
+class Foo2Class extends Foo1Class {
 }
 __decorate([
     name_decorator_1.NameDecorator("fullname"),
