@@ -150,7 +150,6 @@ let VariableTestClass = class VariableTestClass {
     }
     decratorStr3() {
         let m = variable_helper_1.ReflectVariable.getVariableMeta(BarClass, "str3");
-        console.log(m);
         chai_1.assert.equal(m && m.Type, variable_1.VariablePrimitiveType.String, "check Any class - Type");
         chai_1.assert.equal(m && m.TypeRef, String, " check Any class - Refrence");
     }

@@ -36,6 +36,7 @@ let NameTestClass = class NameTestClass {
         if (r1) {
             chai_1.assert.equal(r1.Name, "Foo 1 class", "decration seted");
         }
+        console.log(Foo2Class, Foo2Class.prototype);
         let r2 = name_helper_1.ReflectName.getNameMeta(Foo2Class);
         let r3 = name_helper_1.ReflectName.getNameMeta(Foo2Class);
         chai_1.assert.equal(r2 && r2.Name, "Foo2Class", "one instane seted");
@@ -61,7 +62,8 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], NameTestClass.prototype, "getNameMetaPropery", null);
 NameTestClass = __decorate([
-    mocha_typescript_1.suite
+    mocha_typescript_1.suite,
+    mocha_typescript_1.only
 ], NameTestClass);
 exports.NameTestClass = NameTestClass;
 //# sourceMappingURL=name.test.js.map

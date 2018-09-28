@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { suite, test } from "mocha-typescript";
+import { suite, test, only } from "mocha-typescript";
 import { assert } from "chai";
 import { Name, NameDecorator } from "./name.decorator";
 import { ReflectName } from "./name.helper";
@@ -26,6 +26,7 @@ class Foo2Class {
 
 
 @suite
+@only
 export class NameTestClass {
 
 
@@ -36,8 +37,11 @@ export class NameTestClass {
             assert.equal(r1.Name, "Foo 1 class", "decration seted");
         }
 
+        console.log(Foo2Class, Foo2Class.prototype);
+
         let r2 = ReflectName.getNameMeta(Foo2Class);
         let r3 = ReflectName.getNameMeta(Foo2Class);
+
 
         assert.equal(r2 && r2.Name, "Foo2Class", "one instane seted");
         assert.isTrue(r2 === r3, "one instane seted");
