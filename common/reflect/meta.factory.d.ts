@@ -1,5 +1,5 @@
 import { ClassType } from "../common";
-export declare namespace ReflectMetaFactory {
+export declare namespace ReflectDecoratorFactory {
     interface IClassDecoratorHandle {
         (target: ClassType): void;
     }

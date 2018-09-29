@@ -16,12 +16,12 @@ const meta_factory_1 = require("./meta.factory");
 class FooClass {
 }
 function classDecorator1(aa) {
-    return meta_factory_1.ReflectMetaFactory.ClassDecorator((target) => {
+    return meta_factory_1.ReflectDecoratorFactory.ClassDecorator((target) => {
         target.vv = aa;
     });
 }
 function properyDecorator1(aa) {
-    return meta_factory_1.ReflectMetaFactory.PropertyDecorator((target, property) => {
+    return meta_factory_1.ReflectDecoratorFactory.PropertyDecorator((target, property) => {
         ss[property] = aa;
     });
 }

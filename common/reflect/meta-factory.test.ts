@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { suite, test, only } from "mocha-typescript";
 import { assert } from "chai";
 import { ReflectMeta, BaseMeta } from "./meta";
-import { ReflectMetaFactory } from "./meta.factory";
+import { ReflectDecoratorFactory } from "./meta.factory";
 
 
 
@@ -15,14 +15,14 @@ class FooClass {
 }
 
 function classDecorator1(aa: number) {
-    return ReflectMetaFactory.ClassDecorator((target) => {
+    return ReflectDecoratorFactory.ClassDecorator((target) => {
 
         (target as typeof FooClass11).vv = aa;
     });
 }
 
 function properyDecorator1(aa: string) {
-    return ReflectMetaFactory.PropertyDecorator((target, property) => {
+    return ReflectDecoratorFactory.PropertyDecorator((target, property) => {
         (ss as any)[property] = aa
     });
 }

@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ReflectMetaFactory;
-(function (ReflectMetaFactory) {
+var ReflectDecoratorFactory;
+(function (ReflectDecoratorFactory) {
     function ClassDecorator(handle) {
         return ((target) => {
             handle(target);
         });
     }
-    ReflectMetaFactory.ClassDecorator = ClassDecorator;
+    ReflectDecoratorFactory.ClassDecorator = ClassDecorator;
     function PropertyDecorator(handle) {
         return ((target, propertyKey) => {
             handle(target.constructor, propertyKey);
         });
     }
-    ReflectMetaFactory.PropertyDecorator = PropertyDecorator;
+    ReflectDecoratorFactory.PropertyDecorator = PropertyDecorator;
     function ClassPropertyDecorator(handle) {
         return ((target, propertyKey) => {
             if (propertyKey) {
@@ -24,6 +24,6 @@ var ReflectMetaFactory;
             }
         });
     }
-    ReflectMetaFactory.ClassPropertyDecorator = ClassPropertyDecorator;
-})(ReflectMetaFactory = exports.ReflectMetaFactory || (exports.ReflectMetaFactory = {}));
+    ReflectDecoratorFactory.ClassPropertyDecorator = ClassPropertyDecorator;
+})(ReflectDecoratorFactory = exports.ReflectDecoratorFactory || (exports.ReflectDecoratorFactory = {}));
 //# sourceMappingURL=meta.factory.js.map
