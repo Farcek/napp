@@ -1,12 +1,12 @@
 
-import { VariablePrimitiveType, VariableTypes, VariableMeta, IVariableMeta } from "./variable";
+import { VariablePrimitiveType, VariableTypes, VariableMeta } from "./variable";
 import { ClassType } from "../common";
 import { $$MetakeyVariable } from "./variable.decorator";
 import { ReflectMeta, MetaLevel } from "./meta";
 
 export namespace ReflectVariable {
 
-    export function factoryVariableMetaArray(elementType: IVariableMeta, level?: number): VariableMeta {
+    export function factoryVariableMetaArray(elementType: VariableMeta, level?: number): VariableMeta {
         return new VariableMeta({
             type: VariablePrimitiveType.Array,
             typeName: "array",
@@ -96,7 +96,7 @@ export namespace ReflectVariable {
         });
     }
 
-    export function setVariableMeta(meta: IVariableMeta, target: ClassType, propertyKey: string): boolean {
+    export function setVariableMeta(meta: VariableMeta, target: ClassType, propertyKey: string): boolean {
         return ReflectMeta.SetMeta($$MetakeyVariable, meta, target, propertyKey);
     }
 

@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const meta_1 = require("./meta");
 exports.$$MetakeyProperties = "design:properties";
-class PropertiesMeta {
+class PropertiesMeta extends meta_1.BaseMeta {
     constructor() {
-        this.Level = 0;
+        super(...arguments);
         this.Names = {};
     }
     add(name) {

@@ -1,5 +1,5 @@
 import { ClassType } from "../common";
-import { IMeta } from "./meta";
+import { BaseMeta } from "./meta";
 export declare enum VariablePrimitiveType {
     Void = 1,
     Int = 2,
@@ -11,16 +11,8 @@ export declare enum VariablePrimitiveType {
     Custom = 8
 }
 export declare type VariableTypes = "string" | StringConstructor | "int" | "float" | NumberConstructor | "boolean" | BooleanConstructor | "date" | DateConstructor | ClassType;
-export interface IVariableMeta extends IMeta {
-    readonly Type: VariablePrimitiveType;
-    readonly TypeName: string;
-    readonly TypeRef: ClassType;
-    readonly IsArray: boolean;
-    readonly ArrayElement?: VariableMeta;
-    readonly IsPrimary: boolean;
-}
 export interface IOptionsVariableMeta {
-    level: number;
+    level?: number;
     type: VariablePrimitiveType;
     typeName: string;
     typeRef: ClassType;
@@ -28,8 +20,7 @@ export interface IOptionsVariableMeta {
     arrayElement?: VariableMeta;
     IsPrimary: boolean;
 }
-export declare class VariableMeta implements IVariableMeta {
-    readonly Level: number;
+export declare class VariableMeta extends BaseMeta {
     readonly Type: VariablePrimitiveType;
     readonly TypeName: string;
     readonly TypeRef: ClassType;

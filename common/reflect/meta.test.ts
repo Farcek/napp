@@ -1,12 +1,14 @@
+import "reflect-metadata";
+
 import { suite, test } from "mocha-typescript";
 import { assert } from "chai";
-import { ReflectMeta, IMeta } from "./meta";
+import { ReflectMeta, BaseMeta } from "./meta";
 
 
 
-class FooMeta implements IMeta {
-    constructor(public Level: number, public v?: string) {
-
+class FooMeta extends BaseMeta {
+    constructor(level: number, public v?: string) {
+        super(level);
     }
 
 }
@@ -20,6 +22,15 @@ export class MetaTestClass {
     before() {
         ReflectMeta.DeleteMeta("foo", FooClass);
         ReflectMeta.DeleteMeta("foo", FooClass, "pp");
+    }
+
+    @test
+    reflect() {
+        Reflect.defineMetadata("aa", 23, FooClass);
+        Reflect.defineMetadata("aa", 33, FooClass);
+        
+        let r = Reflect.getMetadata("aa",FooClass);
+        console.log(r);
     }
 
     @test
@@ -88,8 +99,7 @@ export class MetaTestClass {
         assert.isFalse(b4);
         assert.isNotNull(r4);
         assert.equal(r4 && r4.v, "b");
-
-
-
     }
+
+    
 }

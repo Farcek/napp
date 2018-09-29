@@ -5,7 +5,6 @@ import { assert } from "chai";
 import { Name, NameDecorator } from "./name.decorator";
 import { ReflectName } from "./name.helper";
 import { Property } from "./property.decorator";
-import { ClassType } from "../common";
 
 
 
@@ -26,7 +25,7 @@ class Foo2Class extends Foo1Class {
 
 
 @suite
-@only
+
 export class NameTestClass {
 
 

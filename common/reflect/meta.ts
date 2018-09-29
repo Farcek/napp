@@ -1,7 +1,11 @@
 import { ClassType } from "../common";
 
-export interface IMeta {
-    Level: number;
+export class BaseMeta {
+    Level: number = 0;
+
+    constructor(level?: number) {
+        this.Level = level || 0;
+    }
 }
 
 export enum MetaLevel {
@@ -14,10 +18,10 @@ export enum MetaLevel {
 
 export namespace ReflectMeta {
 
+    export function SetMeta($$metaname: string, meta: BaseMeta, target: ClassType, propertyKey?: string): boolean {
+        let old: BaseMeta | null = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey as any);
 
-
-    export function SetMeta($$metaname: string, meta: IMeta, target: ClassType, propertyKey?: string): boolean {
-        let old: IMeta | null = Reflect.getOwnMetadata($$metaname, target.prototype, propertyKey as any);
+        
         if (!old || (old && old.Level <= meta.Level)) {
             Reflect.defineMetadata($$metaname, meta, target.prototype, propertyKey as any);
             return true;

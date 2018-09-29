@@ -1,5 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+class BaseMeta {
+    constructor(level) {
+        this.Level = 0;
+        this.Level = level || 0;
+    }
+}
+exports.BaseMeta = BaseMeta;
 var MetaLevel;
 (function (MetaLevel) {
     MetaLevel[MetaLevel["Level0"] = 0] = "Level0";

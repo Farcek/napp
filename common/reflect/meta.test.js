@@ -9,12 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const mocha_typescript_1 = require("mocha-typescript");
 const chai_1 = require("chai");
 const meta_1 = require("./meta");
-class FooMeta {
-    constructor(Level, v) {
-        this.Level = Level;
+class FooMeta extends meta_1.BaseMeta {
+    constructor(level, v) {
+        super(level);
         this.v = v;
     }
 }
@@ -24,6 +25,12 @@ let MetaTestClass = class MetaTestClass {
     before() {
         meta_1.ReflectMeta.DeleteMeta("foo", FooClass);
         meta_1.ReflectMeta.DeleteMeta("foo", FooClass, "pp");
+    }
+    reflect() {
+        Reflect.defineMetadata("aa", 23, FooClass);
+        Reflect.defineMetadata("aa", 33, FooClass);
+        let r = Reflect.getMetadata("aa", FooClass);
+        console.log(r);
     }
     SetMetaBasic() {
         let meta = new FooMeta(2);
@@ -78,6 +85,12 @@ let MetaTestClass = class MetaTestClass {
         chai_1.assert.equal(r4 && r4.v, "b");
     }
 };
+__decorate([
+    mocha_typescript_1.test,
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], MetaTestClass.prototype, "reflect", null);
 __decorate([
     mocha_typescript_1.test,
     __metadata("design:type", Function),
