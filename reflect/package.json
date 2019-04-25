@@ -2,14 +2,15 @@
   "name": "@napp/reflect",
   "version": "1.0.0",
   "description": "class reflect",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.lib.json",
     "test": "mocha -r ts-node/register test/test.ts"
   },
-  "author": "",
+  "author": "farcek@gmail.com",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.13.7",
@@ -20,5 +21,8 @@
     "source-map-support": "^0.5.12",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
-  }
+  },
+  "keywords": [
+    "class replection"
+  ]
 }
