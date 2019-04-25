@@ -1,0 +1,24 @@
+{
+  "name": "@napp/reflect",
+  "version": "1.0.0",
+  "description": "class reflect",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json",
+    "test": "mocha -r ts-node/register test/test.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^11.13.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "mocha-typescript": "^1.1.17",
+    "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.12",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  }
+}
