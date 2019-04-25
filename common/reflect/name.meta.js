@@ -1,13 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const meta_1 = require("./meta");
 exports.$$MetakeyName = "design:name";
-class NameMeta {
-    constructor(Name, Level) {
+class NameMeta extends meta_1.BaseMeta {
+    constructor(Name, level) {
+        super(level);
         this.Name = Name;
-        this.Level = Level;
-    }
-    eq(o) {
-        return o.Name === this.Name;
     }
 }
 exports.NameMeta = NameMeta;

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const meta_1 = require("./meta");
 var VariablePrimitiveType;
 (function (VariablePrimitiveType) {
     VariablePrimitiveType[VariablePrimitiveType["Void"] = 1] = "Void";
@@ -11,15 +12,13 @@ var VariablePrimitiveType;
     VariablePrimitiveType[VariablePrimitiveType["Array"] = 7] = "Array";
     VariablePrimitiveType[VariablePrimitiveType["Custom"] = 8] = "Custom";
 })(VariablePrimitiveType = exports.VariablePrimitiveType || (exports.VariablePrimitiveType = {}));
-class VariableMeta {
+class VariableMeta extends meta_1.BaseMeta {
     constructor(options) {
-        this.Level = 0;
+        super(options.level);
         this.Type = options.type;
         this.TypeName = options.typeName;
         this.TypeRef = options.typeRef;
         this.IsPrimary = options.IsPrimary;
-        // meta
-        this.Level = options.level;
         // array
         this.IsArray = options.isArray || false;
         this.ArrayElement = options.arrayElement;

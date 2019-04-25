@@ -1,7 +1,6 @@
-import { IMeta } from "./meta";
+import { BaseMeta } from "./meta";
 export declare const $$MetakeyProperties = "design:properties";
-export declare class PropertiesMeta implements IMeta {
-    Level: number;
+export declare class PropertiesMeta extends BaseMeta {
     Names: {
         [key: string]: boolean;
     };

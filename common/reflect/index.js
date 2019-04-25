@@ -5,6 +5,7 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./variable"));
 __export(require("./meta"));
+__export(require("./meta.factory"));
 __export(require("./description.decorator"));
 __export(require("./description.helper"));
 __export(require("./description.meta"));

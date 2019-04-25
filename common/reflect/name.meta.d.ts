@@ -1,11 +1,6 @@
-import { IMeta } from "./meta";
+import { BaseMeta } from "./meta";
 export declare const $$MetakeyName = "design:name";
-export interface INameMeta extends IMeta {
-    Name: string;
-}
-export declare class NameMeta implements INameMeta {
-    Name: string;
-    Level: number;
-    constructor(Name: string, Level: number);
-    eq(o: INameMeta): boolean;
+export declare class NameMeta extends BaseMeta {
+    readonly Name: string;
+    constructor(Name: string, level?: number);
 }

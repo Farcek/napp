@@ -62,8 +62,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], NameTestClass.prototype, "getNameMetaPropery", null);
 NameTestClass = __decorate([
-    mocha_typescript_1.suite,
-    mocha_typescript_1.only
+    mocha_typescript_1.suite
 ], NameTestClass);
 exports.NameTestClass = NameTestClass;
 //# sourceMappingURL=name.test.js.map

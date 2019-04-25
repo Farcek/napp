@@ -1,5 +1,5 @@
 import { ClassType } from "../common";
-import { IMeta } from "./meta";
+import { BaseMeta } from "./meta";
 export enum VariablePrimitiveType {
     Void = 1,
     Int, Float,
@@ -13,19 +13,8 @@ export enum VariablePrimitiveType {
 // tslint:disable-next-line:ban-types
 export type VariableTypes = "string" | StringConstructor | "int" | "float" | NumberConstructor | "boolean" | BooleanConstructor | "date" | DateConstructor | ClassType;
 
-export interface IVariableMeta extends IMeta {
-    readonly Type: VariablePrimitiveType;
-    readonly TypeName: string;
-    readonly TypeRef: ClassType;
-
-    readonly IsArray: boolean;
-
-    readonly ArrayElement?: VariableMeta;
-    readonly IsPrimary: boolean;
-}
-
 export interface IOptionsVariableMeta {
-    level: number;
+    level?: number;
     type: VariablePrimitiveType;
     typeName: string;
     typeRef: ClassType;
@@ -36,8 +25,7 @@ export interface IOptionsVariableMeta {
 
     IsPrimary: boolean;
 }
-export class VariableMeta implements IVariableMeta {
-    readonly Level: number = 0;
+export class VariableMeta extends BaseMeta {
     readonly Type: VariablePrimitiveType;
     readonly TypeName: string;
     readonly TypeRef: ClassType;
@@ -49,13 +37,12 @@ export class VariableMeta implements IVariableMeta {
     readonly IsPrimary: boolean;
 
     constructor(options: IOptionsVariableMeta) {
+        super(options.level);
         this.Type = options.type;
         this.TypeName = options.typeName;
         this.TypeRef = options.typeRef;
         this.IsPrimary = options.IsPrimary;
 
-        // meta
-        this.Level = options.level;
         // array
         this.IsArray = options.isArray || false;
         this.ArrayElement = options.arrayElement;

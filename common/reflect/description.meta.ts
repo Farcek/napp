@@ -1,18 +1,12 @@
-import { IMeta } from "./meta";
+import { BaseMeta } from "./meta";
 
 export const $$MetakeyDescription = "design:description";
 
-export interface IDescriptionMeta extends IMeta {
-    Description: string;
-}
-export class DescriptionMeta implements IDescriptionMeta {
+
+export class DescriptionMeta extends BaseMeta {
 
 
-    constructor(public Description: string, public Level: number) {
-
-    }
-
-    eq(o: IDescriptionMeta) {
-        return o.Description === this.Description;
+    constructor(public readonly Description: string, level?: number) {
+        super(level);
     }
 }
