@@ -111,9 +111,9 @@ export interface ReflectPropertymeta {
 
     type?: ReflectTypemeta;
 
-    name?: string[]
+    name?: string
 
-    description?: string[];
+    description?: string;
 
     order?: number;
     group?: string[];
@@ -123,48 +123,64 @@ export interface ReflectArgumentmeta {
 
     type?: ReflectTypemeta;
 
-    name?: string[]
+    name?: string
 
-    description?: string[];
+    description?: string;
 }
 export interface ReflectMethodmeta {
     method: string;
     return?: ReflectTypemeta;
 
-    name?: string[];
-    description?: string[];
+    name?: string;
+    description?: string;
 
     arguments?: ReflectArgumentmeta[];
 }
+const $reflectKey = Symbol.for('class-reflect');
 export class ReflectClassmeta {
 
-    id = Math.random()
 
-    name?: string[];
-    description?: string[];
 
-    properties: { [name: string]: ReflectPropertymeta } = {};
-    methods: { [name: string]: ReflectMethodmeta } = {};
+    private name?: string;
+    private description?: string;
+
+    private properties: { [name: string]: ReflectPropertymeta } = {};
+    private methods: { [name: string]: ReflectMethodmeta } = {};
 
     static Resolve(target: Classtype) {
-        let meta: ReflectClassmeta = Reflect.getMetadata($names.classmeta, target);
-        if (meta instanceof ReflectClassmeta) return meta;
-
-        Reflect.defineMetadata($names.classmeta, meta = new ReflectClassmeta(), target);
+        let meta: ReflectClassmeta = Reflect.getMetadata($reflectKey, target);
+        if (meta instanceof ReflectClassmeta) {
+            return meta;
+        }
+        Reflect.defineMetadata($reflectKey, meta = new ReflectClassmeta(target), target);
         return meta;
     }
 
+    constructor(private refrence: Classtype) {
+
+    }
+
     // --- class
-    classAddName(name: string) {
-        let names = this.name || (this.name = []);
-        names.unshift(name);
+    classSetName(name: string) {
+        this.name = name;
         return this;
     }
 
-    classAddDescription(description: string) {
-        let descriptions = this.description || (this.description = []);
-        descriptions.unshift(description);
+    classGetName() {
+        if (this.name) {
+            return this.name;
+        }
+
+        return (this.name = this.refrence.name);
+    }
+
+    classSetDescription(description: string) {
+        this.description = description;
         return this;
+    }
+
+    classGetDescription() {
+        return this.description || '';
     }
 
 
@@ -178,24 +194,55 @@ export class ReflectClassmeta {
     properyCreate(propery: string): ReflectPropertymeta {
         return this.properties[propery] = { propery };
     }
-    properyAddName(propery: string, name: string) {
+    properySetName(propery: string, name: string) {
         let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
-
-        let names = p.name || (p.name = []);
-        names.unshift(name);
+        p.name = name;
         return this;
     }
-    properyAddDescription(propery: string, description: string) {
-        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
 
-        let descriptions = p.description || (p.description = []);
-        descriptions.unshift(description);
+    properyGetName(propery: string) {
+        if (this.properyHas(propery)) {
+            let p = this.properyGet(propery);
+            if (p.name) {
+                return p.name;
+            }
+            return propery;
+        }
+        throw new Error(`not found propery. propery name = ${propery}`)
+    }
+    properySetDescription(propery: string, description: string) {
+        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
+        p.description = description;
         return this;
     }
-    properySettype(propery: string, type: ReflectVariableTypes) {
+
+    properyGetDescription(propery: string) {
+        if (this.properyHas(propery)) {
+            let p = this.properyGet(propery);
+            return p.description || '';
+        }
+        throw new Error(`not found propery. propery name = ${propery}`)
+    }
+    properySetType(propery: string, type: ReflectVariableTypes) {
         let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
         p.type = ReflectTypemeta.Factory(type);
         return this;
+    }
+
+    properyGetType(propery: string) {
+        if (this.properyHas(propery)) {
+            let p = this.properyGet(propery);
+
+            if (p.type) {
+                return p.type;
+            }
+
+            let type = Reflect.getMetadata('design:type', this.refrence.prototype, propery);
+            if (type) {
+                return (p.type = ReflectTypemeta.Factory(type));
+            }
+        }
+        throw new Error(`not found propery. propery name = ${propery}`)
     }
 
     // method 
@@ -215,18 +262,36 @@ export class ReflectClassmeta {
         return this;
     }
 
-    methodAddName(method: string, name: string) {
+    methodSetName(method: string, name: string) {
         let m = this.methodHas(method) ? this.methodGet(method) : this.methodCreate(method);
-        let names = m.name || (m.name = []);
-        names.push(name);
+        m.name = name;
         return this;
     }
 
-    methodAddDescription(method: string, name: string) {
+    methodGetName(method: string) {
+        if (this.methodHas(method)) {
+            let m = this.methodGet(method);
+            if (m.name) {
+                return m.name;
+            }
+            return method;
+        }
+
+        throw new Error(`not found method. method name = ${method}`)
+    }
+
+    methodSetDescription(method: string, description: string) {
         let m = this.methodHas(method) ? this.methodGet(method) : this.methodCreate(method);
-        let descriptions = m.description || (m.description = []);
-        descriptions.push(name);
+        m.description = description;
         return this;
+    }
+
+    methodGetDescription(method: string, description: string) {
+        if (this.methodHas(method)) {
+            let m = this.methodGet(method);
+            return m.description || ''
+        }
+        throw new Error(`not found method. method name = ${method}`)
     }
 
     // argument
@@ -266,33 +331,58 @@ export class ReflectClassmeta {
         return arg;
     }
 
-    argumentAddName(method: string, index: number, name: string) {
+    argumentSetName(method: string, index: number, name: string) {
         let arg = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
-        let names = arg.name || (arg.name = []);
-        names.push(name);
+        arg.name = name;
         return this;
     }
 
-    argumentAddDescription(method: string, index: number, description: string) {
+    argumentGetName(method: string, index: number) {
+        if (this.argumentHas(method, index)) {
+            let arg = this.argumentGet(method, index);
+            return arg.name || `argument${arg.index}`
+        }
+        throw new Error(`not found argument. method=${method}; index=${index}`);
+    }
+
+    argumentSetDescription(method: string, index: number, description: string) {
         let arg = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
-        let descriptions = arg.description || (arg.description = []);
-        descriptions.push(description);
+        arg.description = description;
         return this;
     }
 
-    argumentSettype(method: string, index: number, type: ReflectVariableTypes) {
+    argumentGetDescription(method: string, index: number) {
+        if (this.argumentHas(method, index)) {
+            let arg = this.argumentGet(method, index);
+            return arg.description || '';
+        }
+        throw new Error(`not found argument. method=${method}; index=${index}`);
+    }
+
+    argumentSetType(method: string, index: number, type: ReflectVariableTypes) {
         let arg = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
         arg.type = ReflectTypemeta.Factory(type);
         return this;
     }
 
+    argumentGetType(method: string, index: number) {
+        if (this.argumentHas(method, index)) {
+            let arg = this.argumentGet(method, index);
+            if (arg.type) {
+                return arg.type;
+            }
+
+            let params = Reflect.getMetadata('design:paramtypes', this.refrence.prototype, method);
+
+            if (Array.isArray(params) && index in params) {
+                return (arg.type = ReflectTypemeta.Factory(params[0]));
+            }
+        }
+        throw new Error(`not found argument. method=${method}; index=${index}`);
+    }
+
 }
 
-export const $names = {
-    names: Symbol.for('name'),
-    descriptions: Symbol.for('descriptions'),
-    classmeta: Symbol.for('name')
-}
 
 export function NameDecorator(name: string) {
     return (target: object, propertyKey?: string, descriptorOrParamIndex?: any) => {
@@ -300,19 +390,18 @@ export function NameDecorator(name: string) {
             let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
             if (typeof descriptorOrParamIndex == 'number') {
                 // argument
-                meta.argumentAddName(propertyKey, descriptorOrParamIndex, name)
+                meta.argumentSetName(propertyKey, descriptorOrParamIndex, name)
             } else if (descriptorOrParamIndex) {
                 // method
-                meta.methodAddName(propertyKey, name);
+                meta.methodSetName(propertyKey, name);
             } else {
-                // propery                
-                meta.properyAddName(propertyKey, name);
+                // propery
+                meta.properySetName(propertyKey, name);
             }
         } else {
             // class
-
             let meta = ReflectClassmeta.Resolve(target as Classtype);
-            meta.classAddName(name);
+            meta.classSetName(name);
         }
     };
 }
@@ -325,18 +414,18 @@ export function DescriptionDecorator(description: string) {
             let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
             if (typeof descriptorOrParamIndex == 'number') {
                 // argument
-                meta.argumentAddDescription(propertyKey, descriptorOrParamIndex, description)
+                meta.argumentSetDescription(propertyKey, descriptorOrParamIndex, description)
             } else if (descriptorOrParamIndex) {
                 // method
-                meta.methodAddDescription(propertyKey, description);
+                meta.methodSetDescription(propertyKey, description);
             } else {
                 // propery                
-                meta.properyAddDescription(propertyKey, description);
+                meta.properySetDescription(propertyKey, description);
             }
         } else {
             // class
             let meta = ReflectClassmeta.Resolve(target as Classtype);
-            meta.classAddDescription(description);
+            meta.classSetDescription(description);
         }
     };
 }
@@ -347,10 +436,11 @@ export function TypeDecorator(type: ReflectVariableTypes) {
     return (target: object, propertyKey: string, parameterIndex?: number) => {
         let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
         if (typeof parameterIndex == 'number') {
-            meta.argumentSettype(propertyKey, parameterIndex, type);
+            // arg
+            meta.argumentSetType(propertyKey, parameterIndex, type);
         } else {
-
-            meta.properySettype(propertyKey, type);
+            // propery
+            meta.properySetType(propertyKey, type);
         }
     };
 }

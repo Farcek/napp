@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "tsc": "tsc -p tsconfig.json",
     "build": "tsc -p tsconfig.lib.json",
     "test": "mocha -r ts-node/register test/test.ts"
   },
