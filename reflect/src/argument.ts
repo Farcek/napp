@@ -9,5 +9,5 @@ export interface ReflectArgumentmeta {
 
     description?: string;
 
-    attr?: any[]
+    attr?: { [key: string]: any }
 }

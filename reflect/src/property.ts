@@ -12,5 +12,5 @@ export interface ReflectPropertymeta {
     order?: number;
     group?: string[];
 
-    attr?: any[]
+    attr?: { [key: string]: any }
 }

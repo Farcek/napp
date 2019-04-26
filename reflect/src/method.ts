@@ -10,5 +10,5 @@ export interface ReflectMethodmeta {
 
     arguments?: ReflectArgumentmeta[];
 
-    attr?: any[]
+    attr?: { [key: string]: any }
 }

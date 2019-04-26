@@ -15,7 +15,7 @@ export class ReflectClassmeta {
     private properties: { [name: string]: ReflectPropertymeta } = {};
     private methods: { [name: string]: ReflectMethodmeta } = {};
 
-    attr?: any[]
+    private attr?: { [key: string]: any }
 
     static Resolve(target: Classtype) {
         let meta: ReflectClassmeta = Reflect.getMetadata($reflectKey, target);
@@ -270,65 +270,78 @@ export class ReflectClassmeta {
 
     // attr
 
-    attrAddClass(attr: any) {
-        if (Array.isArray(this.attr)) {
-            this.attr.unshift(attr);
-        } else {
-            this.attr = [attr];
+    attrSetClass(key: string, attr: any) {
+        let attrs = this.attr || (this.attr = {});
+        if (key in attrs) {
+            new Error(`already defined class attr. key="${key}"`)
         }
+        attrs[key] = attr;
+
         return this;
     }
-    attrGetClass() {
-        return this.attr || [];
-    }
-    attrAddPropery(propery: string, attr: any) {
-        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
-        if (Array.isArray(p.attr)) {
-            p.attr.unshift(attr);
-        } else {
-            p.attr = [attr];
+    attrGetClass(key: string) {
+        if (this.attr && key in this.attr) {
+            return this.attr[key];
         }
+        return null;
+    }
+    attrSetProperty(key: string, property: string, attr: any) {
+        let p = this.properyHas(property) ? this.properyGet(property) : this.properyCreate(property);
+        let attrs = p.attr || (p.attr = {});
+        if (key in attrs) {
+            new Error(`already defined property attr. key="${key}"; property="${property}"`);
+        }
+        attrs[key] = attr;
         return this;
     }
-    attrGetPropery(propery: string) {
+    attrGetProperty(key: string, propery: string) {
         if (this.properyHas(propery)) {
             let p = this.properyGet(propery);
-            return p.attr || [];
+            if (p.attr && key in p.attr) {
+                return p.attr[key];
+            }
+            return null;
         }
         throw new Error(`not found propery. propery=${propery};`)
     }
 
-    attrAddMethod(method: string, attr: any) {
+    attrSetMethod(key: string, method: string, attr: any) {
         let m = this.methodHas(method) ? this.methodGet(method) : this.methodCreate(method);
-        if (Array.isArray(m.attr)) {
-            m.attr.unshift(attr);
-        } else {
-            m.attr = [attr];
+        let attrs = m.attr || (m.attr = {});
+        if (key in attrs) {
+            new Error(`already defined method attr. key="${key}"; method="${method}"`);
         }
+        attrs[key] = attr;
         return this;
     }
-    attrGetMethod(method: string) {
+    attrGetMethod(key: string, method: string) {
         if (this.methodHas(method)) {
             let m = this.methodGet(method);
-            return m.attr || [];
+            if (m.attr && key in m.attr) {
+                return m.attr[key];
+            }
+            return null;
         }
         throw new Error(`not found method. method=${method};`)
     }
 
-    attrAddArgument(method: string, index: number, attr: any) {
+    attrSetArgument(key: string, method: string, index: number, attr: any) {
         let a = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
-        if (Array.isArray(a.attr)) {
-            a.attr.unshift(attr);
-        } else {
-            a.attr = [attr];
+        let attrs = a.attr || (a.attr = {});
+        if (key in attrs) {
+            new Error(`already defined argument attr. key="${key}"; method="${method}"; index=${index}`);
         }
+        attrs[key] = attr;
         return this;
     }
 
-    attrGetArguments(method: string, index: number) {
+    attrGetArguments(key: string, method: string, index: number) {
         if (this.argumentHas(method, index)) {
             let a = this.argumentGet(method, index);
-            return a.attr || [];
+            if (a.attr && key in a.attr) {
+                return a.attr[key];
+            }
+            return null;
         }
         throw new Error(`not found argument. method=${method}; index=${index}`)
     }
