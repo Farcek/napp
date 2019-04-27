@@ -169,7 +169,7 @@ export class ReflectClassmeta {
         return this;
     }
 
-    methodGetDescription(method: string, description: string) {
+    methodGetDescription(method: string) {
         if (this.methodHas(method)) {
             let m = this.methodGet(method);
             return m.description || ''
