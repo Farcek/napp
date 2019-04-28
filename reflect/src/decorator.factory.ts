@@ -99,6 +99,18 @@ export function decoratorFactoryAll<T>(key?: string, configure?: IDecoratorConfi
     };
 }
 
+export function decoratorFactoryMethodAndClass<T>(key?: string, configure?: IDecoratorConfigure<T>) {
+    return (option: T) => (target: Object, propertyKey?: string, descriptor?: TypedPropertyDescriptor<any>) => {
+        if (propertyKey && descriptor) {
+            // mothod
+            decoratorFactoryMethod<T>(key, configure)(option)(target, propertyKey, descriptor);
+        } else {
+            // class
+            decoratorFactoryClass<T>(key, configure)(option)(target as Classtype);
+        }
+    };
+}
+
 export function decoratorFactoryArgumentAndProperty<T>(key?: string, configure?: IDecoratorConfigure<T>) {
     return (option: T) => (target: Object, propertyKey: string, parameterIndex?: number) => {
         if (typeof parameterIndex == 'number') {
