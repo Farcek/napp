@@ -1,6 +1,6 @@
 {
   "name": "@napp/reflect",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "class reflect. node application common library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,7 +8,7 @@
     "tsc": "tsc -p tsconfig.json",
     "build": "tsc -p tsconfig.lib.json",
     "test": "mocha -r ts-node/register test/**.test.ts",
-    "prepublish": "npm run build",
+    "prenpm2push": "npm run build",
     "npm2push": "npm publish --access=public"
   },
   "author": "farcek@gmail.com",
