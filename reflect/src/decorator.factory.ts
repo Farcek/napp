@@ -37,8 +37,8 @@ export function decoratorFactoryClass<T>(key?: string, configure?: IDecoratorCon
 export function decoratorFactoryProperty<T>(key?: string, configure?: IDecoratorConfigure<T>) {
     return (option: T) => (target: Object, propertyKey: string) => {
         let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
-        if (!meta.properyHas(propertyKey)) {
-            meta.properyCreate(propertyKey);
+        if (!meta.propertyHas(propertyKey)) {
+            meta.propertyCreate(propertyKey);
         }
         if (configure) {
             configure(meta, { decoratorType: DecoratorType.property, property: { name: propertyKey } }, option);

@@ -55,62 +55,66 @@ export class ReflectClassmeta {
 
 
     // --- propery
-    properyHas(propery: string) {
-        return propery in this.properties;
+    propertyHas(property: string) {
+        return property in this.properties;
     }
-    properyGet(propery: string) {
-        return this.properties[propery];
+    propertyGet(property: string) {
+        return this.properties[property];
     }
-    properyCreate(propery: string): ReflectPropertymeta {
-        return this.properties[propery] = { propery };
+    propertyCreate(property: string): ReflectPropertymeta {
+        return this.properties[property] = { propery: property };
     }
-    properySetName(propery: string, name: string) {
-        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
+    propertySetName(property: string, name: string) {
+        let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
         p.name = name;
         return this;
     }
 
-    properyGetName(propery: string) {
-        if (this.properyHas(propery)) {
-            let p = this.properyGet(propery);
+    propertyGetName(property: string) {
+        if (this.propertyHas(property)) {
+            let p = this.propertyGet(property);
             if (p.name) {
                 return p.name;
             }
-            return propery;
+            return property;
         }
-        throw new Error(`not found propery. propery name = ${propery}`)
+        throw new Error(`not found property. property name = ${property}`)
     }
-    properySetDescription(propery: string, description: string) {
-        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
+    propertySetDescription(property: string, description: string) {
+        let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
         p.description = description;
         return this;
     }
 
-    properyGetDescription(propery: string) {
-        if (this.properyHas(propery)) {
-            let p = this.properyGet(propery);
+    propertyGetDescription(property: string) {
+        if (this.propertyHas(property)) {
+            let p = this.propertyGet(property);
             return p.description || '';
         }
-        throw new Error(`not found propery. propery name = ${propery}`)
+        throw new Error(`not found propery. propery name = ${property}`)
     }
-    properySetType(propery: string, type: ReflectTypes) {
-        let p = this.properyHas(propery) ? this.properyGet(propery) : this.properyCreate(propery);
+    propertySetType(property: string, type: ReflectTypes) {
+        let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
         p.type = ReflectTypemeta.Factory(type);
         return this;
     }
 
-    properyGetType(propery: string) {
-        if (this.properyHas(propery)) {
-            let p = this.properyGet(propery);
+    propertyGetType(property: string) {
+        if (this.propertyHas(property)) {
+            let p = this.propertyGet(property);
 
             if (p.type) {
                 return p.type;
             }
 
-            let type = Reflect.getMetadata('design:type', this.refrence.prototype, propery);
+            let type = Reflect.getMetadata('design:type', this.refrence.prototype, property);
             return (p.type = ReflectTypemeta.Factory(type));
         }
-        throw new Error(`not found propery. propery name = ${propery}`)
+        throw new Error(`not found propery. propery name = ${property}`)
+    }
+
+    propertyNames() {
+        return Object.keys(this.properties);
     }
 
     // method 
@@ -286,7 +290,7 @@ export class ReflectClassmeta {
         return null;
     }
     attrSetProperty(key: string, property: string, attr: any) {
-        let p = this.properyHas(property) ? this.properyGet(property) : this.properyCreate(property);
+        let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
         let attrs = p.attr || (p.attr = {});
         if (key in attrs) {
             new Error(`already defined property attr. key="${key}"; property="${property}"`);
@@ -295,8 +299,8 @@ export class ReflectClassmeta {
         return this;
     }
     attrGetProperty(key: string, propery: string) {
-        if (this.properyHas(propery)) {
-            let p = this.properyGet(propery);
+        if (this.propertyHas(propery)) {
+            let p = this.propertyGet(propery);
             if (p.attr && key in p.attr) {
                 return p.attr[key];
             }

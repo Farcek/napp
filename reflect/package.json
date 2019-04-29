@@ -1,6 +1,6 @@
 {
   "name": "@napp/reflect",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "class reflect. node application common library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

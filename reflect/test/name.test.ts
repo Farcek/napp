@@ -58,15 +58,15 @@ class NameAndDescTest {
 
     @test()
     properyName() {
-        let a = this.meta.properyGet('a');
+        let a = this.meta.propertyGet('a');
         assert.deepEqual(a.name, 'pa')
         assert.deepEqual(a.description, 'a property description')
 
-        let b = this.meta.properyGet('b');
+        let b = this.meta.propertyGet('b');
         assert.deepEqual(b.name, 'pb')
         assert.deepEqual(b.description, undefined)
 
-        let c = this.meta.properyGet('c');
+        let c = this.meta.propertyGet('c');
         assert.isDefined(c)
         assert.deepEqual(c.description, 'propery boolean c')
     }
@@ -112,17 +112,17 @@ class NameAndDescTest {
     @test()
     designType() {
         {
-            let type = this.meta.properyGetType('a');
+            let type = this.meta.propertyGetType('a');
             assert.deepEqual(type.name, 'string');
         }
 
         {
-            let type = this.meta.properyGetType('c');
+            let type = this.meta.propertyGetType('c');
             assert.deepEqual(type.ref, Boolean);
         }
 
         {
-            let type = this.meta.properyGetName('c');
+            let type = this.meta.propertyGetName('c');
             assert.deepEqual(type, 'c');
         }
 

@@ -23,13 +23,13 @@ class SampleClass {
     meta.classGetName() // "sample class"
     meta.classGetDescription() // "sample class desc"
 
-    meta.properyGetName('age') // "age"
-    meta.properyGetDescription('age') // ""
-    meta.properyGetType('age') // ReflectTypes.int
+    meta.propertyGetName('age') // "age"
+    meta.propertyGetDescription('age') // ""
+    meta.propertyGetType('age') // ReflectTypes.int
 
-    meta.properyGetName('desc') // "des"
-    meta.properyGetDescription('desc') // "description"
-    meta.properyGetType('desc') // ReflectTypes.string
+    meta.propertyGetName('desc') // "des"
+    meta.propertyGetDescription('desc') // "description"
+    meta.propertyGetType('desc') // ReflectTypes.string
 
 
     meta.methodGetName('save') // "save"

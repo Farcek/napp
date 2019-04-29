@@ -1,13 +1,14 @@
 import { Classtype } from "./common";
 
 export enum ReflectType {
-    Void = 1,
-    Int, Float,
-    String,
-    Boolean,
-    Date,
-    Array,
-    Complex
+    Void = 0,
+    Int = 2,
+    Float = 4,
+    String = 8,
+    Boolean = 16,
+    Date = 32,
+    Array = 64,
+    Complex = 128
 }
 
 // tslint:disable-next-line:ban-types
@@ -20,7 +21,7 @@ export class ReflectTypemeta {
 
     constructor(private option: {
         type: ReflectType,
-        ref: Classtype,
+        ref?: Classtype,
         name: string,
         isArray: boolean
     }) {
@@ -99,7 +100,6 @@ export class ReflectTypemeta {
         return new ReflectTypemeta({
             type: ReflectType.Void,
             name: "void",
-            ref: Object,
             isArray: false
         });
     }

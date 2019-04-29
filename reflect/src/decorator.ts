@@ -5,7 +5,7 @@ export const Name = decoratorFactoryAll<string>(undefined, (meta, decoratorOptio
     if (decoratorOption.decoratorType == DecoratorType.class) {
         meta.classSetName(name);
     } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.properySetName(decoratorOption.property.name, name);
+        meta.propertySetName(decoratorOption.property.name, name);
     } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
         meta.methodSetName(decoratorOption.method.name, name);
     } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
@@ -18,7 +18,7 @@ export const Description = decoratorFactoryAll<string>(undefined, (meta, decorat
     if (decoratorOption.decoratorType == DecoratorType.class) {
         meta.classSetDescription(description);
     } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.properySetDescription(decoratorOption.property.name, description);
+        meta.propertySetDescription(decoratorOption.property.name, description);
     } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
         meta.methodSetDescription(decoratorOption.method.name, description);
     } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
@@ -30,7 +30,7 @@ export const Description = decoratorFactoryAll<string>(undefined, (meta, decorat
 
 export const Type = decoratorFactoryArgumentAndProperty<ReflectTypes>(undefined, (meta, decoratorOption, type) => {
     if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.properySetType(decoratorOption.property.name, type);
+        meta.propertySetType(decoratorOption.property.name, type);
     } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
         meta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, type);
     }
