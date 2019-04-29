@@ -30,6 +30,10 @@ export class ReflectClassmeta {
 
     }
 
+    get refrenceType() {
+        return this.refrence;
+    }
+
     // --- class
     classSetName(name: string) {
         this.name = name;
@@ -274,76 +278,76 @@ export class ReflectClassmeta {
 
     // attr
 
-    attrSetClass(key: string, attr: any) {
+    attrSetClass( key: symbol | string , attr: any) {
         let attrs = this.attr || (this.attr = {});
         if (key in attrs) {
-            new Error(`already defined class attr. key="${key}"`)
+            new Error(`already defined class attr. key="${key.toString()}"`)
         }
-        attrs[key] = attr;
+        attrs[key as string] = attr;
 
         return this;
     }
-    attrGetClass(key: string) {
+    attrGetClass(key: symbol | string) {
         if (this.attr && key in this.attr) {
-            return this.attr[key];
+            return this.attr[key as any];
         }
         return null;
     }
-    attrSetProperty(key: string, property: string, attr: any) {
+    attrSetProperty(key: symbol | string, property: string, attr: any) {
         let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
         let attrs = p.attr || (p.attr = {});
         if (key in attrs) {
-            new Error(`already defined property attr. key="${key}"; property="${property}"`);
+            new Error(`already defined property attr. key="${key.toString()}"; property="${property}"`);
         }
-        attrs[key] = attr;
+        attrs[key as string] = attr;
         return this;
     }
-    attrGetProperty(key: string, propery: string) {
+    attrGetProperty(key: symbol | string, propery: string) {
         if (this.propertyHas(propery)) {
             let p = this.propertyGet(propery);
             if (p.attr && key in p.attr) {
-                return p.attr[key];
+                return p.attr[key as string];
             }
             return null;
         }
         throw new Error(`not found propery. propery=${propery};`)
     }
 
-    attrSetMethod(key: string, method: string, attr: any) {
+    attrSetMethod(key: symbol | string, method: string, attr: any) {
         let m = this.methodHas(method) ? this.methodGet(method) : this.methodCreate(method);
         let attrs = m.attr || (m.attr = {});
         if (key in attrs) {
-            new Error(`already defined method attr. key="${key}"; method="${method}"`);
+            new Error(`already defined method attr. key="${key.toString()}"; method="${method}"`);
         }
-        attrs[key] = attr;
+        attrs[key as string] = attr;
         return this;
     }
-    attrGetMethod(key: string, method: string) {
+    attrGetMethod(key: symbol | string, method: string) {
         if (this.methodHas(method)) {
             let m = this.methodGet(method);
             if (m.attr && key in m.attr) {
-                return m.attr[key];
+                return m.attr[key as string];
             }
             return null;
         }
         throw new Error(`not found method. method=${method};`)
     }
 
-    attrSetArgument(key: string, method: string, index: number, attr: any) {
+    attrSetArgument(key: symbol | string, method: string, index: number, attr: any) {
         let a = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
         let attrs = a.attr || (a.attr = {});
         if (key in attrs) {
-            new Error(`already defined argument attr. key="${key}"; method="${method}"; index=${index}`);
+            new Error(`already defined argument attr. key="${key.toString()}"; method="${method}"; index=${index}`);
         }
-        attrs[key] = attr;
+        attrs[key as string] = attr;
         return this;
     }
 
-    attrGetArguments(key: string, method: string, index: number) {
+    attrGetArguments(key: symbol | string, method: string, index: number) {
         if (this.argumentHas(method, index)) {
             let a = this.argumentGet(method, index);
             if (a.attr && key in a.attr) {
-                return a.attr[key];
+                return a.attr[key as string];
             }
             return null;
         }

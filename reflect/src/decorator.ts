@@ -1,45 +1,48 @@
 import { decoratorFactoryAll, DecoratorType, decoratorFactoryArgumentAndProperty, decoratorFactoryMethod } from "./decorator.factory";
 import { ReflectTypes } from "./type";
 
-export const Name = decoratorFactoryAll<string>(undefined, (meta, decoratorOption, name) => {
-    if (decoratorOption.decoratorType == DecoratorType.class) {
-        meta.classSetName(name);
-    } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.propertySetName(decoratorOption.property.name, name);
-    } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-        meta.methodSetName(decoratorOption.method.name, name);
-    } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-        meta.argumentSetName(decoratorOption.argument.method, decoratorOption.argument.index, name);
-    }
-    return false;
-});
+export function Name(name: string) {
+    return decoratorFactoryAll<{ name: string }>({ name }, undefined, (meta, decoratorOption, data) => {
+        if (decoratorOption.decoratorType == DecoratorType.class) {
+            meta.classSetName(data.name);
+        } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
+            meta.propertySetName(decoratorOption.property.name, data.name);
+        } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
+            meta.methodSetName(decoratorOption.method.name, data.name);
+        } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
+            meta.argumentSetName(decoratorOption.argument.method, decoratorOption.argument.index, data.name);
+        }
+    });
+}
 
-export const Description = decoratorFactoryAll<string>(undefined, (meta, decoratorOption, description) => {
-    if (decoratorOption.decoratorType == DecoratorType.class) {
-        meta.classSetDescription(description);
-    } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.propertySetDescription(decoratorOption.property.name, description);
-    } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-        meta.methodSetDescription(decoratorOption.method.name, description);
-    } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-        meta.argumentSetDescription(decoratorOption.argument.method, decoratorOption.argument.index, description);
-    }
-    return false;
-});
+export function Description(description: string) {
+    return decoratorFactoryAll<{ description: string }>({ description }, undefined, (meta, decoratorOption, data) => {
+        if (decoratorOption.decoratorType == DecoratorType.class) {
+            meta.classSetDescription(data.description);
+        } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
+            meta.propertySetDescription(decoratorOption.property.name, data.description);
+        } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
+            meta.methodSetDescription(decoratorOption.method.name, data.description);
+        } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
+            meta.argumentSetDescription(decoratorOption.argument.method, decoratorOption.argument.index, data.description);
+        }
+    });
+}
 
+export function Type(type: ReflectTypes) {
+    return decoratorFactoryArgumentAndProperty<{ type: ReflectTypes }>({ type }, undefined, (meta, decoratorOption, data) => {
+        if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
+            meta.propertySetType(decoratorOption.property.name, data.type);
+        } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
+            meta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, data.type);
+        }
+    });
+}
 
-export const Type = decoratorFactoryArgumentAndProperty<ReflectTypes>(undefined, (meta, decoratorOption, type) => {
-    if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-        meta.propertySetType(decoratorOption.property.name, type);
-    } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-        meta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, type);
-    }
-    return false;
-});
-
-export const Return = decoratorFactoryMethod<ReflectTypes>(undefined, (meta, decoratorOption, type) => {
-    if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-        meta.methodSetReturn(decoratorOption.method.name, type);
-    }
-    return false;
-});
+export function Return(type: ReflectTypes) {
+    return decoratorFactoryMethod<{ type: ReflectTypes }>({ type }, undefined, (meta, decoratorOption, data) => {
+        if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
+            meta.methodSetReturn(decoratorOption.method.name, data.type);
+        }
+    });
+}

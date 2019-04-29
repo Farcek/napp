@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Return, Name, Description, ReflectClassmeta, decoratorFactoryClass, decoratorFactoryAll } from "../src";
+import { Return, Name, Description, ReflectClassmeta, decoratorFactoryClass, decoratorFactoryAll, decoratorFactoryProperty } from "../src";
 import { suite, test, only } from "mocha-typescript";
 import { assert } from "chai";
 
@@ -8,9 +8,13 @@ interface IFormater {
 
     type: number;
 }
-const Formater = decoratorFactoryClass<IFormater>('formater');
+function Formater(param: IFormater) {
+    return decoratorFactoryClass<IFormater>(param, 'formater');
 
-const Label = decoratorFactoryAll<string>('label')
+}
+function Label(txt: string) {
+    return decoratorFactoryProperty<string>(txt, 'label');
+}
 
 
 @Formater({ temp: 'test1', type: 18 })

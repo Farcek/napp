@@ -48,8 +48,13 @@ interface ICustommeta {
 }
 
 // custom  decorator
-const User = decoratorFactoryClass<ICustommeta>("user");
-const Caption = decoratorFactoryArgumentAndProperty<ICustommeta>("caption");
+function User(param:ICustommeta){
+    return decoratorFactoryClass<ICustommeta>(param,"user");
+}
+function Caption(param:ICustommeta){
+    return decoratorFactoryArgumentAndProperty<ICustommeta>(param,"caption");
+}
+
 
 //
 @User({ name: 'sample', flag: 11 })
