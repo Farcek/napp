@@ -1,48 +1,52 @@
 import { decoratorFactoryAll, DecoratorType, decoratorFactoryArgumentAndProperty, decoratorFactoryMethod } from "./decorator.factory";
 import { ReflectTypes } from "./type";
 
-export function Name(name: string) {
-    return decoratorFactoryAll<{ name: string }>({ name }, undefined, (meta, decoratorOption, data) => {
+export function Name(nameOftarget: string) {
+    return decoratorFactoryAll<void>((target, decoratorOption) => {
+        let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.class) {
-            meta.classSetName(data.name);
+            classmeta.classSetName(nameOftarget);
         } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-            meta.propertySetName(decoratorOption.property.name, data.name);
+            classmeta.propertySetName(decoratorOption.property.name, nameOftarget);
         } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-            meta.methodSetName(decoratorOption.method.name, data.name);
+            classmeta.methodSetName(decoratorOption.method.name, nameOftarget);
         } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-            meta.argumentSetName(decoratorOption.argument.method, decoratorOption.argument.index, data.name);
+            classmeta.argumentSetName(decoratorOption.argument.method, decoratorOption.argument.index, nameOftarget);
         }
     });
 }
 
 export function Description(description: string) {
-    return decoratorFactoryAll<{ description: string }>({ description }, undefined, (meta, decoratorOption, data) => {
+    return decoratorFactoryAll<void>((target, decoratorOption) => {
+        let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.class) {
-            meta.classSetDescription(data.description);
+            classmeta.classSetDescription(description);
         } else if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-            meta.propertySetDescription(decoratorOption.property.name, data.description);
+            classmeta.propertySetDescription(decoratorOption.property.name, description);
         } else if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-            meta.methodSetDescription(decoratorOption.method.name, data.description);
+            classmeta.methodSetDescription(decoratorOption.method.name, description);
         } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-            meta.argumentSetDescription(decoratorOption.argument.method, decoratorOption.argument.index, data.description);
+            classmeta.argumentSetDescription(decoratorOption.argument.method, decoratorOption.argument.index, description);
         }
     });
 }
 
 export function Type(type: ReflectTypes) {
-    return decoratorFactoryArgumentAndProperty<{ type: ReflectTypes }>({ type }, undefined, (meta, decoratorOption, data) => {
+    return decoratorFactoryArgumentAndProperty<void>((target, decoratorOption, ) => {
+        let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-            meta.propertySetType(decoratorOption.property.name, data.type);
+            classmeta.propertySetType(decoratorOption.property.name, type);
         } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-            meta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, data.type);
+            classmeta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, type);
         }
     });
 }
 
 export function Return(type: ReflectTypes) {
-    return decoratorFactoryMethod<{ type: ReflectTypes }>({ type }, undefined, (meta, decoratorOption, data) => {
+    return decoratorFactoryMethod<void>((target, decoratorOption) => {
+        let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-            meta.methodSetReturn(decoratorOption.method.name, data.type);
+            classmeta.methodSetReturn(decoratorOption.method.name, type);
         }
     });
 }

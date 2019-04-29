@@ -9,11 +9,11 @@ interface IFormater {
     type: number;
 }
 function Formater(param: IFormater) {
-    return decoratorFactoryClass<IFormater>(param, 'formater');
+    return decoratorFactoryClass<IFormater>(() => param, 'formater');
 
 }
 function Label(txt: string) {
-    return decoratorFactoryProperty<string>(txt, 'label');
+    return decoratorFactoryProperty<string>(() => txt, 'label');
 }
 
 

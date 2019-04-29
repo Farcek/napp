@@ -9,6 +9,7 @@ export enum DecoratorType {
 }
 
 export interface IDecoratorOption {
+    classmeta: ReflectClassmeta;
     decoratorType: DecoratorType;
 
     property?: { name: string }
@@ -16,112 +17,101 @@ export interface IDecoratorOption {
     argument?: { method: string, index: number }
 }
 export interface IDecoratorHandler<T> {
-    /**
-     * return true. push to attr 
-     */
-    (meta: ReflectClassmeta, decoratorOption: IDecoratorOption, option: T): void;
+    (targer: Object, decoratorOption: IDecoratorOption): T;
 }
 
 
 
-export function decoratorFactoryClass<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryClass<T>(handler: IDecoratorHandler<T>, key?: symbol | string, ) {
     return (target: Function) => {
-        let meta = ReflectClassmeta.Resolve(target as Classtype);
-        if (handler) {
-            handler(meta, { decoratorType: DecoratorType.class }, attrDta);
-        }
+        let classmeta = ReflectClassmeta.Resolve(target as Classtype);
+        let attrDta = handler(target, { classmeta, decoratorType: DecoratorType.class });
         if (key) {
-            meta.attrSetClass(key, attrDta);
+            classmeta.attrSetClass(key, attrDta);
         }
     }
 }
-export function decoratorFactoryProperty<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryProperty<T>(handler: IDecoratorHandler<T>, key?: symbol | string) {
     return (target: Object, propertyKey: string) => {
-        let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
-        if (!meta.propertyHas(propertyKey)) {
-            meta.propertyCreate(propertyKey);
+        let classmeta = ReflectClassmeta.Resolve(target.constructor as Classtype);
+        if (!classmeta.propertyHas(propertyKey)) {
+            classmeta.propertyCreate(propertyKey);
         }
-        if (handler) {
-            handler(meta, { decoratorType: DecoratorType.property, property: { name: propertyKey } }, attrDta);
-        }
+        let attrDta = handler(classmeta, { classmeta, decoratorType: DecoratorType.property, property: { name: propertyKey } });
         if (key) {
-            meta.attrSetProperty(key, propertyKey, attrDta);
+            classmeta.attrSetProperty(key, propertyKey, attrDta);
         }
     }
 }
 
-export function decoratorFactoryMethod<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryMethod<T>(handler: IDecoratorHandler<T>, key?: symbol | string, ) {
     return (target: Object, method: string, descriptor: TypedPropertyDescriptor<any>) => {
-        let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
-        if (!meta.methodHas(method)) {
-            meta.methodCreate(method);
+        let classmeta = ReflectClassmeta.Resolve(target.constructor as Classtype);
+        if (!classmeta.methodHas(method)) {
+            classmeta.methodCreate(method);
         }
-        if (handler) {
-            handler(meta, { decoratorType: DecoratorType.method, method: { name: method, descriptor } }, attrDta);
-        }
+        let attrDta = handler(target, { classmeta, decoratorType: DecoratorType.method, method: { name: method, descriptor } });
         if (key) {
-            meta.attrSetMethod(key, method, attrDta);
+            classmeta.attrSetMethod(key, method, attrDta);
         }
     }
 }
 
-export function decoratorFactoryArgument<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryArgument<T>(handler: IDecoratorHandler<T>, key?: symbol | string) {
     return (target: Object, method: string, index: number) => {
-        let meta = ReflectClassmeta.Resolve(target.constructor as Classtype);
-        if (!meta.argumentHas(method, index)) {
-            meta.argumentCreate(method, index);
+        let classmeta = ReflectClassmeta.Resolve(target.constructor as Classtype);
+        if (!classmeta.argumentHas(method, index)) {
+            classmeta.argumentCreate(method, index);
         }
-        if (handler) {
-            handler(meta, { decoratorType: DecoratorType.argument, argument: { method, index } }, attrDta);
-        }
+        let attrDta = handler(target, { classmeta, decoratorType: DecoratorType.argument, argument: { method, index } });
         if (key) {
-            meta.attrSetArgument(key, method, index, attrDta);
+            classmeta.attrSetArgument(key, method, index, attrDta);
         }
     }
 }
 
 
 
-export function decoratorFactoryAll<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryAll<T>(handler: IDecoratorHandler<T>, key?: symbol | string) {
     return (target: Object, propertyKey?: string, descriptorOrParamIndex?: any) => {
         if (propertyKey) {
             if (typeof descriptorOrParamIndex == 'number') {
                 // argument
-                decoratorFactoryArgument<T>(attrDta, key, handler)(target, propertyKey, descriptorOrParamIndex);
+                decoratorFactoryArgument<T>(handler, key)(target, propertyKey, descriptorOrParamIndex);
             } else if (descriptorOrParamIndex) {
                 // method
-                decoratorFactoryMethod<T>(attrDta, key, handler)(target, propertyKey, descriptorOrParamIndex);
+                decoratorFactoryMethod<T>(handler, key)(target, propertyKey, descriptorOrParamIndex);
             } else {
                 // propery
-                decoratorFactoryProperty<T>(attrDta, key, handler)(target, propertyKey);
+                decoratorFactoryProperty<T>(handler, key)(target, propertyKey);
             }
         } else {
             // class
-            decoratorFactoryClass<T>(attrDta, key, handler)(target as Function);
+            decoratorFactoryClass<T>(handler, key)(target as Function);
         }
     };
 }
 
-export function decoratorFactoryMethodAndClass<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryMethodAndClass<T>(handler: IDecoratorHandler<T>, key?: symbol | string) {
     return (target: Object, propertyKey?: string, descriptor?: TypedPropertyDescriptor<any>) => {
         if (propertyKey && descriptor) {
             // mothod
-            decoratorFactoryMethod<T>(attrDta, key, handler)(target, propertyKey, descriptor);
+            decoratorFactoryMethod<T>(handler, key)(target, propertyKey, descriptor);
         } else {
             // class
-            decoratorFactoryClass<T>(attrDta, key, handler)(target as Classtype);
+            decoratorFactoryClass<T>(handler, key)(target as Classtype);
         }
     };
 }
 
-export function decoratorFactoryArgumentAndProperty<T>(attrDta: T, key?: symbol | string, handler?: IDecoratorHandler<T>) {
+export function decoratorFactoryArgumentAndProperty<T>(handler: IDecoratorHandler<T>, key?: symbol | string) {
     return (target: Object, propertyKey: string, parameterIndex?: number) => {
         if (typeof parameterIndex == 'number') {
             // argument
-            decoratorFactoryArgument<T>(attrDta, key, handler)(target, propertyKey, parameterIndex);
+            decoratorFactoryArgument<T>(handler, key)(target, propertyKey, parameterIndex);
         } else {
             // propery
-            decoratorFactoryProperty<T>(attrDta, key, handler)(target, propertyKey);
+            decoratorFactoryProperty<T>(handler, key)(target, propertyKey);
         }
     };
 }
