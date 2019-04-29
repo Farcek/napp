@@ -37,7 +37,7 @@ export function decoratorFactoryProperty<T>(handler: IDecoratorHandler<T>, key?:
         if (!classmeta.propertyHas(propertyKey)) {
             classmeta.propertyCreate(propertyKey);
         }
-        let attrDta = handler(classmeta, { classmeta, decoratorType: DecoratorType.property, property: { name: propertyKey } });
+        let attrDta = handler(target, { classmeta, decoratorType: DecoratorType.property, property: { name: propertyKey } });
         if (key) {
             classmeta.attrSetProperty(key, propertyKey, attrDta);
         }
