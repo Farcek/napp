@@ -41,14 +41,14 @@ export class ReflectTypemeta {
         return this.option.isArray;
     }
 
-    static Factory(type: ReflectTypes) {
+    static Factory(type: ReflectTypes, isArray: boolean) {
         if (type) {
             if (type === String || type === "string") {
                 return new ReflectTypemeta({
                     type: ReflectType.String,
                     ref: String,
                     name: "string",
-                    isArray: false
+                    isArray
                 });
             }
 
@@ -57,7 +57,7 @@ export class ReflectTypemeta {
                     type: ReflectType.Int,
                     name: "int",
                     ref: Number,
-                    isArray: false
+                    isArray
                 });
             }
 
@@ -66,7 +66,7 @@ export class ReflectTypemeta {
                     type: ReflectType.Float,
                     name: "float",
                     ref: Number,
-                    isArray: false
+                    isArray
                 });
             }
 
@@ -77,7 +77,7 @@ export class ReflectTypemeta {
                     type: ReflectType.Boolean,
                     name: "boolean",
                     ref: Boolean,
-                    isArray: false
+                    isArray
                 });
             }
             if (type === Date || type === "date") {
@@ -85,6 +85,15 @@ export class ReflectTypemeta {
                     type: ReflectType.Date,
                     name: "date",
                     ref: Date,
+                    isArray
+                });
+            }
+
+            if (type === Array) {
+                return new ReflectTypemeta({
+                    type: ReflectType.Date,
+                    name: "array",
+                    ref: Object,
                     isArray: false
                 });
             }
@@ -93,7 +102,7 @@ export class ReflectTypemeta {
                 type: ReflectType.Complex,
                 name: type.name,
                 ref: type,
-                isArray: false
+                isArray
             });
         }
 

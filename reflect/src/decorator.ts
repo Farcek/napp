@@ -31,22 +31,22 @@ export function Description(description: string) {
     });
 }
 
-export function Type(type: ReflectTypes) {
+export function Type(type: ReflectTypes, isArray?: boolean) {
     return decoratorFactoryArgumentAndProperty<void>((target, decoratorOption, ) => {
         let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.property && decoratorOption.property) {
-            classmeta.propertySetType(decoratorOption.property.name, type);
+            classmeta.propertySetType(decoratorOption.property.name, type, isArray || false);
         } else if (decoratorOption.decoratorType == DecoratorType.argument && decoratorOption.argument) {
-            classmeta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, type);
+            classmeta.argumentSetType(decoratorOption.argument.method, decoratorOption.argument.index, type, isArray || false);
         }
     });
 }
 
-export function Return(type: ReflectTypes) {
+export function Return(type: ReflectTypes, isArray?: boolean) {
     return decoratorFactoryMethod<void>((target, decoratorOption) => {
         let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
-            classmeta.methodSetReturn(decoratorOption.method.name, type);
+            classmeta.methodSetReturn(decoratorOption.method.name, type, isArray || false);
         }
     });
 }

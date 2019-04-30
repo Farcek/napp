@@ -97,9 +97,9 @@ export class ReflectClassmeta {
         }
         throw new Error(`not found propery. propery name = ${property}`)
     }
-    propertySetType(property: string, type: ReflectTypes) {
+    propertySetType(property: string, type: ReflectTypes, isArray:boolean) {
         let p = this.propertyHas(property) ? this.propertyGet(property) : this.propertyCreate(property);
-        p.type = ReflectTypemeta.Factory(type);
+        p.type = ReflectTypemeta.Factory(type, isArray);
         return this;
     }
 
@@ -112,7 +112,7 @@ export class ReflectClassmeta {
             }
 
             let type = Reflect.getMetadata('design:type', this.refrence.prototype, property);
-            return (p.type = ReflectTypemeta.Factory(type));
+            return (p.type = ReflectTypemeta.Factory(type, false));
         }
         throw new Error(`not found propery. propery name = ${property}`)
     }
@@ -132,9 +132,9 @@ export class ReflectClassmeta {
         return this.methods[method] = { method };
     }
 
-    methodSetReturn(method: string, type: ReflectTypes) {
+    methodSetReturn(method: string, type: ReflectTypes, isArray:boolean) {
         let m = this.methodHas(method) ? this.methodGet(method) : this.methodCreate(method);
-        m.return = ReflectTypemeta.Factory(type);
+        m.return = ReflectTypemeta.Factory(type, isArray);
         return this;
     }
     methodGetReturn(method: string) {
@@ -146,7 +146,7 @@ export class ReflectClassmeta {
 
             let type = Reflect.getMetadata('design:returntype', this.refrence.prototype, method);
 
-            return (m.return = ReflectTypemeta.Factory(type));
+            return (m.return = ReflectTypemeta.Factory(type, false));
 
         }
 
@@ -251,9 +251,9 @@ export class ReflectClassmeta {
         throw new Error(`not found argument. method=${method}; index=${index}`);
     }
 
-    argumentSetType(method: string, index: number, type: ReflectTypes) {
+    argumentSetType(method: string, index: number, type: ReflectTypes, isArray:boolean) {
         let arg = this.argumentHas(method, index) ? this.argumentGet(method, index) : this.argumentCreate(method, index);
-        arg.type = ReflectTypemeta.Factory(type);
+        arg.type = ReflectTypemeta.Factory(type, isArray);
         return this;
     }
 
@@ -267,10 +267,10 @@ export class ReflectClassmeta {
 
             let params = Reflect.getMetadata('design:paramtypes', this.refrence.prototype, method);
             if (Array.isArray(params) && index in params) {
-                return (arg.type = ReflectTypemeta.Factory(params[index]));
+                return (arg.type = ReflectTypemeta.Factory(params[index], false));
             }
 
-            return arg.type = ReflectTypemeta.Factory(null as any);
+            return arg.type = ReflectTypemeta.Factory(null as any, false);
         }
         throw new Error(`not found argument. method=${method}; index=${index}`);
     }
