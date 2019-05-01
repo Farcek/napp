@@ -1,4 +1,4 @@
-import { decoratorFactoryAll, DecoratorType, decoratorFactoryArgumentAndProperty, decoratorFactoryMethod } from "./decorator.factory";
+import { decoratorFactoryAll, DecoratorType, decoratorFactoryArgumentAndProperty, decoratorFactoryMethod, decoratorFactoryProperty } from "./decorator.factory";
 import { ReflectTypes } from "./type";
 
 export function Name(nameOftarget: string) {
@@ -47,6 +47,47 @@ export function Return(type: ReflectTypes, isArray?: boolean) {
         let { classmeta } = decoratorOption;
         if (decoratorOption.decoratorType == DecoratorType.method && decoratorOption.method) {
             classmeta.methodSetReturn(decoratorOption.method.name, type, isArray || false);
+        }
+    });
+}
+
+export interface IPropertyDecorator {
+
+    /**
+     * tuhain gishuuni ner;
+     * 
+     * default : variavle name
+     */
+    name?: string;
+
+    description?: string;
+
+    // group?: string;
+
+    // /**
+    //  * erembleh index;
+    //  * default: 0
+    //  */
+    // index?: number;
+
+    type?: ReflectTypes;
+    isArray?: boolean;
+}
+export function Property(options?: IPropertyDecorator) {
+    return decoratorFactoryProperty((target, decoratorOption) => {
+        let { classmeta, decoratorType, property } = decoratorOption;
+        if (decoratorType == DecoratorType.property && property) {
+            if (options && options.name) {
+                classmeta.propertySetName(property.name, options.name);
+            }
+
+            if (options && options.description) {
+                classmeta.propertySetDescription(property.name, options.description);
+            }
+
+            if (options && options.type) {
+                classmeta.propertySetType(property.name, options.type, options.isArray || false);
+            }
         }
     });
 }
