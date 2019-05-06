@@ -15,7 +15,7 @@ class SampleClass {
     @Name('age')
     age: number = 0;
 
-    @Name('description')
+    @Description('description')
     desc: string = '';
 
     @Return(String)
@@ -54,9 +54,13 @@ meta.argumentGetType('save', 0) // ReflectTypes.int
 ``` typescript
 // custom  decorator
 
+function User(param: ICustommeta) {
+    return decoratorFactoryClass<ICustommeta>(() => param, "user");
+}
+function Caption(param: ICustommeta) {
+    return decoratorFactoryArgumentAndProperty<ICustommeta>(() => param, "caption");
+}
 
-const User = decoratorFactoryClass<ICustommeta>("user");
-const Caption = decoratorFactoryArgumentAndProperty<ICustommeta>("caption");
 
 //
 @User({ name: 'sample', flag: 11 })
