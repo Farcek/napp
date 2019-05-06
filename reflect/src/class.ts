@@ -182,6 +182,7 @@ export class ReflectClassmeta {
             let m = this.methodGet(method);
             return m.description || ''
         }
+        console.log(`not found method. method name = ${method}`, `refrence:`,this.refrence )
         throw new Error(`not found method. method name = ${method}`)
     }
 

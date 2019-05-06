@@ -1,4 +1,5 @@
 import { Classtype } from "./common";
+import { ReflectClassmeta } from "./class";
 
 export enum ReflectType {
     Void = 0,
@@ -98,9 +99,10 @@ export class ReflectTypemeta {
                 });
             }
 
+
             return new ReflectTypemeta({
                 type: ReflectType.Complex,
-                name: type.name,
+                name: ReflectClassmeta.Resolve(type).classGetName(),
                 ref: type,
                 isArray
             });
