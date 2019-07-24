@@ -1,0 +1,8 @@
+# common error trasaction
+-------------------------------------------
+
+
+
+``` typescript
+
+```
