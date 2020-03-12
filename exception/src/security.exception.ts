@@ -1,26 +1,16 @@
-import { IHttpException } from './exception.http';
-
-import { $$ExeptionNames } from './names';
 import { Exception } from './exception';
 
 
-export class AuthenticationException extends Exception implements IHttpException {
-
+export class AuthenticationException extends Exception {
   constructor(message?: string) {
-    super(message || 'requared authentication');
-    Object.setPrototypeOf(this, AuthenticationException.prototype);
-    this.name = $$ExeptionNames.Authentication;
+    super('authentication', message || 'requared authentication');
+    this.setDataValue('status', 401);
   }
-
-  status = 401;
 }
-
-export class AuthorizationException extends Exception implements IHttpException {
-  constructor(message: string) {
-    super(message);
-    Object.setPrototypeOf(this, AuthenticationException.prototype);
-    this.name = $$ExeptionNames.Authorization;
+export class AuthorizationException extends Exception {
+  constructor(requaredRoles: string | string[]) {
+    super('authorization', `requared role: "${Array.isArray(requaredRoles) ? requaredRoles.join(', ') : requaredRoles}"`);
+    this.setDataValue('status', 401);
+    this.setDataValue('requaredRoles', Array.isArray(requaredRoles) ? requaredRoles : [requaredRoles]);
   }
-
-  status = 401;
 }

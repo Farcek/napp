@@ -1,15 +1,9 @@
 import { Exception } from './exception';
-import { IHttpException } from './exception.http';
 
-import { $$ExeptionNames } from './names';
 
-export class ServerException extends Exception implements IHttpException {
-  constructor(message: string) {
-    super(message);
-    Object.setPrototypeOf(this, ServerException.prototype);
-    super.name = $$ExeptionNames.NotFound;
+export class ServerException extends Exception {
+  constructor(message: string ) {
+    super('server', message);
+    this.setDataValue('status', 501);
   }
-
-  status = 501;
-  
 }

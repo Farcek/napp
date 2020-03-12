@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { suite, test } from "mocha-typescript";
 
 import { assert } from "chai";
-import { InvalidPropertiesException, convertException, $$ExeptionNames } from "../src";
+import { ValidationFormException, ExceptionConvert } from "../src";
 
 
 @suite
@@ -10,11 +10,10 @@ class PropertiesExceptionTest {
     @test
     async basic() {
 
-        let e = new InvalidPropertiesException("check properties", {
+        let e = new ValidationFormException("check properties", {
             name: ["emoty", "low text"]
         });
         assert.equal(e.message, "check properties")
-        assert.equal(e.name, $$ExeptionNames.InvalidProperties)
         assert.deepEqual(e.getPropertyMessages('name'), ["emoty", "low text"])
 
     }
@@ -22,15 +21,15 @@ class PropertiesExceptionTest {
     async conver1() {
 
         try {
-            let e = new InvalidPropertiesException();
+            let e = new ValidationFormException();
             e.addPropertyMessage("name", "empty");
 
             throw e.toJson();
         } catch (error) {
 
-            let ex = convertException(error) as InvalidPropertiesException;
+            let ex = ExceptionConvert(error) as ValidationFormException;
 
-            assert.instanceOf(ex, InvalidPropertiesException);
+            assert.instanceOf(ex, ValidationFormException);
             let c = ex.map((p, m) => ({ [p]: m.join() }));
             assert.deepEqual(c, [{ name: 'empty' }]);
 

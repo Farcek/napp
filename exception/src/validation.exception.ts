@@ -1,28 +1,32 @@
-import { IHttpException } from './exception.http';
-import { Exception } from './exception';
-import { $$ExeptionNames } from './names';
 
-export class InvalidMessageException extends Exception implements IHttpException {
+import { Exception } from './exception';
+
+
+
+
+export class ValidationException extends Exception {
     constructor(message: string) {
-        super(message);
-        Object.setPrototypeOf(this, InvalidMessageException.prototype);
-        super.name = $$ExeptionNames.InvalidMessage;
+        super('validation', message);
+        this.setDataValue('status', 400);
     }
-    status = 400;
 }
 
 export interface IInvalidProperties {
     [key: string]: string[];
 }
-export class InvalidPropertiesException extends Exception implements IHttpException {
+export class ValidationFormException extends Exception {
 
-    private properties: IInvalidProperties;
+
     constructor(message?: string, properties?: IInvalidProperties) {
-        super(message || 'Invalid properties');
-        Object.setPrototypeOf(this, InvalidPropertiesException.prototype);
-        super.name = $$ExeptionNames.InvalidProperties;
-        this.properties = properties || {};
+        super('validation-from', message || 'Invalid properties');
+        this.setDataValue('status', 400);
+        this.data['properties'] = properties || {};
     }
+
+    get properties() {
+        return (this.data['properties'] || (this.data['properties'] = {})) as IInvalidProperties
+    }
+
 
     addPropertyMessage(property: string, message: string) {
         if (property in this.properties) {
@@ -54,16 +58,6 @@ export class InvalidPropertiesException extends Exception implements IHttpExcept
             return this.properties[property].map((message) => handle(message))
         }
         return [];
-    }
-
-    status = 400;
-
-    toJson() {
-        return {
-            name: this.name,
-            message: this.message,
-            properties: this.properties
-        };
     }
 
 

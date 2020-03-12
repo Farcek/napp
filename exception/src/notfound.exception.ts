@@ -1,15 +1,9 @@
 import { Exception } from './exception';
-import { IHttpException } from './exception.http';
 
-import { $$ExeptionNames } from './names';
 
-export class NotFoundException extends Exception implements IHttpException {
+export class NotFoundException extends Exception {
     constructor(message: string) {
-
-        super(message);
-        Object.setPrototypeOf(this, NotFoundException.prototype);
-        super.name = $$ExeptionNames.NotFound;
+        super('notfound', message);
+        this.setDataValue('status', 404);
     }
-
-    status = 404;
 }

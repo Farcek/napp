@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { suite, test } from "mocha-typescript";
 
 import { assert } from "chai";
-import { NotFoundException, $$ExeptionNames, convertException } from "../src";
+import { NotFoundException, ExceptionConvert, Exception } from "../src";
 
 
 
@@ -12,15 +12,13 @@ class NotfoundTest {
     async basic() {
 
         try {
-            throw new NotFoundException("notfound1")
+            throw new NotFoundException("notfound1").setData({a:1})
         } catch (error) {
             let err: NotFoundException = error;
             assert.equal("notfound1", err.message)
-            assert.equal($$ExeptionNames.NotFound, err.name)
-            assert.equal(404, err.status)
+            assert.equal(1, err.getDataValue('a'))
 
-            let o = err.toJson();
-
+            
 
         }
     }
@@ -29,14 +27,13 @@ class NotfoundTest {
     async convert() {
 
         try {
-            throw new NotFoundException("notfound1")
+            throw new NotFoundException("notfound1").setDataValue('b',2)
         } catch (error) {
-            let err = convertException(error) as NotFoundException;
+            let err = ExceptionConvert(error) as NotFoundException;
 
             assert.instanceOf(err, NotFoundException);
             assert.equal("notfound1", err.message);
-            assert.equal($$ExeptionNames.NotFound, err.name);
-            assert.equal(404, err.status);
+            assert.equal(2, err.getDataValue('b'));
         }
 
         
@@ -46,17 +43,17 @@ class NotfoundTest {
 
         try {
             throw {
-                name : $$ExeptionNames.NotFound,
+                name : 'test',
                 message :'not2',
-                status : 404
+                data : {c:3}
             }
         } catch (error) {
-            let err = convertException(error) as NotFoundException;
+            let err = ExceptionConvert(error);
 
-            assert.instanceOf(err, NotFoundException);
+            assert.instanceOf(err, Exception);
             assert.equal("not2", err.message);
-            assert.equal($$ExeptionNames.NotFound, err.name);
-            assert.equal(404, err.status);
+            assert.equal('test', err.name);
+            assert.equal(3, err.getDataValue('c'));
         }
     }
 }
