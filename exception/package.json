@@ -1,6 +1,6 @@
 {
   "name": "@napp/exception",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "common exception. node application common library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -20,9 +20,6 @@
   "engines": {
     "node": ">=6.10.2"
   },
-  "dependencies": {
-    "reflect-metadata": "^0.1.13"
-  },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
@@ -31,6 +28,7 @@
     "mocha": "^6.1.4",
     "mocha-typescript": "^1.1.17",
     "source-map-support": "^0.5.12",
+    "reflect-metadata": "^0.1.13",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   },
