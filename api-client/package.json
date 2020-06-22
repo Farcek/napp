@@ -2,8 +2,7 @@
   "name": "@napp/api",
   "version": "1.0.0",
   "description": "Rest full api",
-  "types": "lib/index.d.ts",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
     "test:server": "ts-node -r source-map-support/register -r tsconfig-paths/register test/server/server.ts",
