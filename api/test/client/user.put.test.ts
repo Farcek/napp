@@ -13,15 +13,15 @@ let apiClient =  clientModule.factory(metaUserPut.meta)
 
 
 @suite 
-@only
 export class UserPutTest{
 
     @test
     async basic() {
         let req =  apiClient({
-            body : {age : 1, name: 'farcek'},
-            path : {customer : 1, mode : metaUserPut.OrderMode.A , order : 'aa11' },
-            query : {page : 1, sort_type : 'asc', sort_field : 'name'}
+
+            b : {age : 1, name: 'farcek'},
+            p : {customer : 1, mode : metaUserPut.OrderMode.A , order : 'aa11' },
+            q : {page : 1, sort_type : 'asc', sort_field : 'name'}
 
         })
         req.validate();

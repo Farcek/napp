@@ -1,0 +1,10 @@
+{
+  "name": "@napp/api-core",
+  "version": "1.0.0",
+  "description": "Rest full api",
+  "types": "index.d.ts",
+  "main": "index.js",  
+  "keywords": ["napp", "Rest API", "API framework"],
+  "author": "Farcek <farcek@gmail.com>",
+  "license": "ISC"
+}

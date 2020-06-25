@@ -1,15 +1,16 @@
 // process.env.DEBUG='*'
 import { module } from "./module";
 
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const morgan = require('morgan');
+const app = express();
+const port = 3000;
 
 
 
 
 
-// m.register(metaHelloWorld.meta)
+app.use(morgan('dev'));
 
 
 

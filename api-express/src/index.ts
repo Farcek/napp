@@ -1,8 +1,0 @@
-/**
- * user jagsaalt avah endpoint
- */
-
-
-
-
-

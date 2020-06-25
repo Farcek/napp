@@ -1,5 +1,5 @@
 
-import { AInterface } from 'src/core'
+import { AInterface } from '@napp/api-core'
 export namespace metaUserPut {
     export interface QParam {
         page: number;
@@ -23,6 +23,12 @@ export namespace metaUserPut {
         age: number;
     }
 
+    export interface ReqParam {
+        q: QParam
+        b: BParam
+
+        p: PParam
+    }
 
     export interface Resp {
         body: BParam
@@ -31,50 +37,46 @@ export namespace metaUserPut {
         query: QParam
     }
 
-    export const meta: AInterface<Resp, BParam, PParam, QParam> = {
+    export const meta: AInterface<ReqParam, Resp> = {
         name: 'user.put',
         path: '/user.put/:customer/:order/:mode',
-        url: ({ path, query }) => `/user.put/${path?.customer}/${path?.order}/${path?.mode}?page=${query?.page}&sort_field=${query?.sort_field}&sort_type=${query?.sort_type}`,
+        url: ({ p: path, q: query }) => `/user.put/${path?.customer}/${path?.order}/${path?.mode}?page=${query?.page}&sort_field=${query?.sort_field}&sort_type=${query?.sort_type}`,
         method: 'put',
-        validation: async ({ body }) => {
-            if (!(body?.name)) {
+        validation: async ({ b: body }) => {
+            if (!body.name) {
                 throw new Error('requre name')
             }
         },
 
         pipe: {
-            query: {
-                request2param: ({ req: qParam, handle }) => {
-
-                    let i: number = handle('page').num()
-                    return {
-                        page: parseInt(qParam.page),
-                        sort_field: qParam.sort_field,
-                        sort_type: qParam.sort_type == 'asc' ? 'asc' : 'desc'
-                    }
-                }
+            fromHttp: ({ body, path, query }) => {
+                let b: BParam = body;
+                let p: PParam = {
+                    customer: parseInt(path.customer),
+                    mode: parseInt(path.mode),
+                    order: path.order
+                };
+                let q: QParam = {
+                    page: parseInt(query.page),
+                    sort_field: query.sort_field,
+                    sort_type: query.sort_type == 'asc' ? 'asc' : 'desc'
+                };
+                return { b, p, q }
             },
-            path: {
-                param2request: (p) => {
-                    return {
+            toHttp: ({ p,q,b }) => {
+                return { 
+                    body : b,
+                    path : {
                         customer: `` + p.customer,
                         mode: `` + p.mode,
                         order: p.order
+                    },
+                    query : {
+                        page:''+q.page,
+                        sort_field:''+q.sort_field,
+                        sort_type:''+q.sort_type,
                     }
-                },
-                request2param: ({ req: qParam }) => {
-
-                    return {
-                        customer: parseInt(qParam.customer),
-                        mode: qParam.mode == '1' ? OrderMode.A : OrderMode.B,
-                        order: qParam.order
-                    }
-                }
-            },
-            body: {
-                param2request: (p) => {
-                    return p
-                }
+                 }
             }
         }
     }

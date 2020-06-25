@@ -42,8 +42,14 @@
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": ".", /* Base directory to resolve non-absolute module names. */
     "paths": {
-      "src/*": [
-        "src/*"
+      "@napp/api-core": [
+        "core/index"
+      ],
+      "@napp/api-client": [
+        "client/index"
+      ],
+      "@napp/api-server": [
+        "server/index"
       ],
       "test/*": [
         "test/*"
@@ -51,7 +57,9 @@
     },
     /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
     "rootDirs": [
-      "src",
+      "core",
+      "client",
+      "server",
       "test"
     ],
     /* List of root folders whose combined content represents the structure of the project at runtime. */
@@ -74,8 +82,10 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "src/**/*.ts",
-    "test/**/*.ts",
+    "core/**/*.ts",
+    "client/**/*.ts",
+    "server/**/*.ts",
+    "test/**/*.ts"
   ],
   "exclude": [
     "node_modules"
