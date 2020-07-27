@@ -24,7 +24,7 @@ export class DtiModule {
 
     }
 
-    
+
 
     private getPUrl(urlPath: string, pParams: Record<string, string>) {
 
@@ -100,7 +100,13 @@ export class DtiModule {
                 call: async () => {
                     let httpParam = this.pipeParam(meta, param);
                     let url = this.url(meta, param, httpParam);
-                    return await this.provider(url, mt, httpParam.body);
+
+                    if (url && url.startsWith("http://") && url.startsWith("https://") && url.startsWith("//")) {
+                        return await this.provider(url, mt, httpParam.body);
+                    }
+
+                    return await this.provider(this.baseUrl + url, mt, httpParam.body);
+
                 },
                 validate: async () => {
                     if (meta.validation) {

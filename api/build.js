@@ -24,6 +24,7 @@ buildCore();
 function buildClient() {
     let cPkg = readPk('client/package.json');
     cPkg.version = mPkg.version;
+    cPkg.dependencies["@napp/api-core"] = mPkg.version;
     fs.writeFileSync('dist/client/package.json', JSON.stringify(cPkg, null, 4));
 
     console.log('build client/package.json')
@@ -34,6 +35,7 @@ buildClient();
 function buildServer() {
     let cPkg = readPk('server/package.json');
     cPkg.version = mPkg.version;
+    cPkg.dependencies["@napp/api-core"] = mPkg.version;
     fs.writeFileSync('dist/server/package.json', JSON.stringify(cPkg, null, 4));
 
     console.log('build server/package.json')

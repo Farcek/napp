@@ -25,11 +25,22 @@ export interface AInterface<REQ, RES> {
     pipe?: IPipeHandler<REQ>;
 }
 
-export function AActionFactory<REQ, RES>(name: string, path?: string) {
+export interface IBuilder<REQ, RES> {
+    url: (url: (param: REQ) => string) => IBuilder<REQ, RES>;
+    path: (path: string) => IBuilder<REQ, RES>;
+    method: (method: METHOD) => IBuilder<REQ, RES>;
+    validation: (handle: (param: REQ) => void) => IBuilder<REQ, RES>;
+
+    pipeToHttp: (handle: (param: REQ) => HttpParam) => IBuilder<REQ, RES>;
+    pipeFromHttp: (handle: (param: Required<HttpParam>) => REQ) => IBuilder<REQ, RES>;
+
+    factory: () => AInterface<REQ, RES>;
+}
+export function AActionFactory<REQ, RES>(name: string, path?: string): IBuilder<REQ, RES> {
     let m: AInterface<REQ, RES> = {
         name, path
     };
-    let builder = {
+    let builder: IBuilder<REQ, RES> = {
 
         url: (url: (param: REQ) => string) => {
             m.url = url;
