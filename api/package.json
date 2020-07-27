@@ -1,6 +1,6 @@
 {
     "name": "@napp/api",
-    "version": "1.0.7",
+    "version": "1.0.15",
     "description": "Rest full api",
     "types": "lib/index.d.ts",
     "main": "lib/index.js",
@@ -13,8 +13,8 @@
         "push:server": "cd dist/client & npm publish --access=public",
         "push:client": "cd dist/server & npm publish --access=public",
         "---2": "------------------------------------------------------------------------------------",
-        "version": "npm version patch",
-        "prepush": "npm run version & npm run build",
+        "upversion": "npm version patch",
+        "prepush": "npm run upversion & npm run build",
         "push": "npm run push:core & npm run push:server & npm run push:client",
         "---3": "------------------------------------------------------------------------------------",
         "test:server": "ts-node -r source-map-support/register -r tsconfig-paths/register test/server/server.ts",
@@ -26,7 +26,6 @@
     "engines": {
         "node": ">=12.14.1"
     },
-
     "dependencies": {
         "@testdeck/mocha": "^0.1.0",
         "@types/mocha": "^7.0.2",

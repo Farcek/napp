@@ -1,4 +1,3 @@
-
 const fs = require('fs');
 
 // 1. copy core
@@ -9,6 +8,7 @@ function readPk(file) {
 }
 
 let mPkg = readPk('package.json');
+
 function buildCore() {
     let cPkg = readPk('core/package.json');
     cPkg.version = mPkg.version;
