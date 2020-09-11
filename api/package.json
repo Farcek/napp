@@ -19,8 +19,9 @@
         "---3": "------------------------------------------------------------------------------------",
         "test:server": "ts-node -r source-map-support/register -r tsconfig-paths/register test/server/server.ts",
         "test": "mocha -r ts-node/register -r source-map-support/register -r tsconfig-paths/register test/**/*.test.ts",
+        "test:builder": "ts-node -r source-map-support/register -r tsconfig-paths/register test/builder.ts",
         "---4": "------------------------------------------------------------------------------------",
-        "t4": "ts-node -r source-map-support/register -r tsconfig-paths/register builder/test.ts"
+        "t4": "ts-node -r source-map-support/register -r tsconfig-paths/register test/test.ts"
     },
     "keywords": [],
     "author": "farcek@gmail.com",

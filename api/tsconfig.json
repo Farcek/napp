@@ -51,6 +51,9 @@
       "@napp/api-server": [
         "server/index"
       ],
+      "@napp/api-builder": [
+        "builder/index"
+      ],
       "test/*": [
         "test/*"
       ]
@@ -60,6 +63,7 @@
       "core",
       "client",
       "server",
+      "builder",
       "test"
     ],
     /* List of root folders whose combined content represents the structure of the project at runtime. */

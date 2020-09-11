@@ -63,8 +63,8 @@ export class ApiBuilder {
         let src = this.project.createSourceFile(pathJoin(this.opt.outDir, 'endpoints.ts'), undefined, { overwrite: true });
         src.addImportDeclaration({
             namedImports: ["AInterface", "HttpParam"],
-            // moduleSpecifier: "@napp/api-core",
-            moduleSpecifier: "../core",
+            moduleSpecifier: "@napp/api-core",
+            // moduleSpecifier: "../core",
         });
         src.addImportDeclaration({
             namedImports: ["Components"],
