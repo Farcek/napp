@@ -34,6 +34,45 @@ export interface IBuilder<REQ, RES> {
 
     factory: () => AInterface<REQ, RES>;
 }
+
+export function AActionOverider<REQ, RES>(m: AInterface<REQ, RES>) {
+
+    let builder: IBuilder<REQ, RES> = {
+
+        url: (url: (param: REQ) => string) => {
+            m.url = url;
+            return builder;
+        },
+        path: (path: string) => {
+            m.path = path;
+            return builder;
+        },
+        method: (method: METHOD) => {
+            m.method = method;
+            return builder;
+        },
+        validation: (handle: (param: REQ) => void) => {
+            m.validation = handle;
+            return builder;
+        },
+
+        pipeToHttp: (handle: (param: REQ) => HttpParam) => {
+            let pipe = m.pipe || (m.pipe = {});
+            pipe.toHttp = handle;
+            return builder;
+        },
+        pipeFromHttp: (handle: (param: Required<HttpParam>) => REQ) => {
+            let pipe = m.pipe || (m.pipe = {});
+            pipe.fromHttp = handle;
+            return builder;
+        },
+
+        factory: () => m
+
+    }
+
+    return builder;
+}
 export function AActionFactory<REQ, RES>(name: string, path?: string): IBuilder<REQ, RES> {
     let m: AInterface<REQ, RES> = {
         name, path

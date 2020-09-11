@@ -42,3 +42,15 @@ function buildServer() {
 }
 
 buildServer();
+
+
+function buildBuilder() {
+    let cPkg = readPk('builder/package.json');
+    cPkg.version = mPkg.version;
+    cPkg.dependencies["@napp/api-core"] = mPkg.version;
+    fs.writeFileSync('dist/builder/package.json', JSON.stringify(cPkg, null, 4));
+
+    console.log('build builder/package.json')
+}
+
+buildBuilder();
