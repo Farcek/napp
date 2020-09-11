@@ -1,0 +1,13 @@
+{
+    "name": "@napp/api-builder",
+    "version": "1.0.0",
+    "description": "Rest full api. api builder from OpenAPI v3",
+    "types": "index.d.ts",
+    "main": "index.js",
+    "keywords": ["napp", "Rest API", "API framework", "REST full Client"],
+    "author": "Farcek <farcek@gmail.com>",
+    "license": "ISC",
+    "dependencies": {
+        "@napp/api-core": "6.1.0"
+    }
+}

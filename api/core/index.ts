@@ -1,5 +1,3 @@
-import { url } from "inspector";
-
 export type METHOD = 'get' | 'post' | 'put' | 'delete';
 
 export interface HttpParam {

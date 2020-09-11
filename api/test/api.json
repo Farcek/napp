@@ -1,0 +1,339 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "test",
+        "version": "1.0",
+        "description": "testok",
+        "contact": {
+            "name": "farcek"
+        },
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "servers": [{
+        "url": "http://localhost:3000"
+    }],
+    "tags": [
+        "tag-test"
+    ],
+    "paths": {
+        "/path1": {
+            "get": {
+                "summary": "get list",
+                "tags": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "total": {
+                                            "type": "number"
+                                        },
+                                        "item1": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "item2": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id1": {
+                                                    "type": "string"
+                                                },
+                                                "name1": {
+                                                    "$ref": "#/components/schemas/Item"
+                                                },
+                                                "sub": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "a": {
+                                                            "type": "string"
+                                                        },
+                                                        "b": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "required": [
+                                                "id1",
+                                                "name1"
+                                            ]
+                                        },
+                                        "arr": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "arr2": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "k": {
+                                                        "type": "string"
+                                                    },
+                                                    "ag": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "total"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "get-path1111",
+                "description": "get lost"
+            }
+        },
+        "/p2/{p1}/{p2}": {
+            "get": {
+                "summary": "Your GET endpoints",
+                "tags": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "operationId": "get-path1112",
+                "description": "asdsd fa"
+            },
+            "post": {
+                "summary": "ppp2",
+                "operationId": "post-p2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Success"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Item"
+                            }
+                        }
+                    },
+                    "description": "asd asdf"
+                },
+                "description": "sad fas",
+                "parameters": [{
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "q1",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "q2",
+                        "description": "ss"
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "name": "h1"
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "q2"
+                    },
+                    {
+                        "schema": {
+                            "type": "number"
+                        },
+                        "in": "header",
+                        "name": "h2",
+                        "required": true
+                    }
+                ]
+            },
+            "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "name": "p2",
+                    "in": "path",
+                    "required": true
+                },
+                {
+                    "schema": {
+                        "type": "string"
+                    },
+                    "name": "p1",
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/qparam-test": {
+            "get": {
+                "summary": "Your GET endpoint",
+                "tags": [],
+                "responses": {},
+                "operationId": "get-qparam-test",
+                "description": "aa",
+                "parameters": [{
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "p2",
+                        "required": true
+                    },
+                    {
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "name": "q1"
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Success": {
+                "title": "Success",
+                "type": "object",
+                "description": "test model",
+                "properties": {
+                    "flag": {
+                        "type": "boolean"
+                    },
+                    "n1": {
+                        "type": "number"
+                    },
+                    "n2": {
+                        "type": "integer"
+                    },
+                    "n3": {
+                        "type": "boolean"
+                    },
+                    "n4": {
+                        "type": "null"
+                    },
+                    "n5": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "n6": {
+                        "type": "array",
+                        "items": {}
+                    },
+                    "n7": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "dd": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "n8": {
+                        "$ref": "#/components/schemas/Item"
+                    },
+                    "n9": {
+                        "title": "TestSingle",
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "haha": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "haha"
+                    }
+                },
+                "required": [
+                    "flag",
+                    "n2",
+                    "n3",
+                    "n4",
+                    "n8"
+                ]
+            },
+            "Item": {
+                "title": "Item",
+                "type": "object",
+                "description": "arr item",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name"
+                ]
+            },
+            "aaa": {
+                "title": "Aaa",
+                "type": "object",
+                "description": "hjh",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "aad": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            }
+        }
+    }
+}
