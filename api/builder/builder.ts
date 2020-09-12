@@ -13,7 +13,9 @@ const jsConvert = require('js-convert-case');
 export interface OApiBuilder {
     file: string;
 
+
     outDir: string;
+    namespace?: string
 }
 export class ApiBuilder {
 
@@ -72,7 +74,7 @@ export class ApiBuilder {
         });
 
         let nsContiner = src.addNamespace({
-            name: 'nappi',
+            name: this.opt.namespace || 'nappi',
             isExported: true
         });
 
@@ -102,10 +104,10 @@ export class ApiBuilder {
         let iPath: { intr: InterfaceDeclaration, multi: boolean } | undefined = undefined;
         let iQuery: { intr: InterfaceDeclaration, multi: boolean } | undefined = undefined;
         let iBody: { intr: InterfaceDeclaration, multi: boolean } | undefined = undefined;
-        
+
         { // request
 
-            if ( endpoint.isMultParam) {
+            if (endpoint.isMultParam) {
                 if (endpoint.paramPath) {
                     let intr = namespace.addInterface({
                         name: `ParamPath`, isExported: true
@@ -230,7 +232,7 @@ export class ApiBuilder {
                             if (iBody || iPath || iQuery) {
                                 w.write('pipe:').block(() => {
                                     w.write('fromHttp:').write(`(http:HttpParam) =>`).block(() => {
-                                        if ( endpoint.isMultParam) {
+                                        if (endpoint.isMultParam) {
                                             let params: string[] = [];
                                             if (iBody) {
                                                 w.writeLine('let body:ParamBody = http.body as any;');
@@ -259,7 +261,7 @@ export class ApiBuilder {
                                     });
                                     w.writeLine(',');
                                     w.write('toHttp:').write('(req: Requ) =>').block(() => {
-                                        if ( endpoint.isMultParam) {
+                                        if (endpoint.isMultParam) {
                                             w.write('return ').block(() => {
                                                 if (iBody) {
                                                     w.writeLine('body: req.body as any,');

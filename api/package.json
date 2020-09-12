@@ -1,6 +1,6 @@
 {
     "name": "@napp/api",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "description": "Rest full api",
     "types": "lib/index.d.ts",
     "main": "lib/index.js",
