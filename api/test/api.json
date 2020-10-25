@@ -1,27 +1,36 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "test",
+        "title": "sysop",
         "version": "1.0",
-        "description": "testok",
+        "description": "Parking system sysop api",
         "contact": {
-            "name": "farcek"
-        },
-        "license": {
-            "name": "MIT"
+            "name": "Farcek"
         }
     },
     "servers": [{
-        "url": "http://localhost:3000"
+        "url": "http://localhost:3780",
+        "description": "develop"
     }],
     "tags": [
-        "tag-test"
+
     ],
     "paths": {
-        "/path1": {
+        "/parking/{id}": {
+            "parameters": [{
+                "schema": {
+                    "type": "string"
+                },
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "parking id"
+            }],
             "get": {
-                "summary": "get list",
-                "tags": [],
+                "summary": "parking get",
+                "tags": [
+                    "parking"
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -30,101 +39,174 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "total": {
-                                            "type": "number"
+                                        "name": {
+                                            "type": "string"
                                         },
-                                        "item1": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string"
-                                                },
-                                                "name": {
-                                                    "type": "string"
-                                                }
-                                            }
+                                        "note": {
+                                            "type": "string"
                                         },
-                                        "item2": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id1": {
-                                                    "type": "string"
-                                                },
-                                                "name1": {
-                                                    "$ref": "#/components/schemas/Item"
-                                                },
-                                                "sub": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "a": {
-                                                            "type": "string"
-                                                        },
-                                                        "b": {
-                                                            "type": "string"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "required": [
-                                                "id1",
-                                                "name1"
-                                            ]
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
                                         },
-                                        "arr": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "number"
-                                            }
-                                        },
-                                        "arr2": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "k": {
-                                                        "type": "string"
-                                                    },
-                                                    "ag": {
-                                                        "type": "integer"
-                                                    }
-                                                }
-                                            }
+                                        "type": {
+                                            "type": "integer"
                                         }
                                     },
                                     "required": [
-                                        "total"
+                                        "name",
+                                        "note",
+                                        "created_at",
+                                        "type"
                                     ]
                                 }
                             }
                         }
                     }
                 },
-                "operationId": "get-path1111",
-                "description": "get lost"
-            }
-        },
-        "/p2/{p1}/{p2}": {
-            "get": {
-                "summary": "Your GET endpoints",
-                "tags": [],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                },
-                "operationId": "get-path1112",
-                "description": "asdsd fa"
+                "operationId": "parkingGet",
+                "description": "parking list"
             },
-            "post": {
-                "summary": "ppp2",
-                "operationId": "post-p2",
+            "delete": {
+                "summary": "Parking delete",
+                "operationId": "parkingDelete",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Success"
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "parking"
+                ],
+                "description": "Parking delete"
+            },
+            "post": {
+                "summary": "parking update",
+                "operationId": "parking-update",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "parking"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "description": ""
+                },
+                "description": "parking update"
+            }
+        },
+        "/parking": {
+            "get": {
+                "summary": "parking read list",
+                "tags": [
+                    "parking"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "create_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "note": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "create_at",
+                                            "note",
+                                            "type"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "parkingList",
+                "description": "parking read list"
+            },
+            "post": {
+                "summary": "parking create",
+                "operationId": "parkingCreate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "created id"
+                                        }
+                                    },
+                                    "required": [
+                                        "id"
+                                    ]
                                 }
                             }
                         }
@@ -134,206 +216,723 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Item"
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "number",
+                                        "description": "Post=10; Office=20; Parking=30"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "type"
+                                ]
                             }
                         }
-                    },
-                    "description": "asd asdf"
-                },
-                "description": "sad fas",
-                "parameters": [{
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "query",
-                        "name": "q1",
-                        "required": true
-                    },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "query",
-                        "name": "q2",
-                        "description": "ss"
-                    },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "header",
-                        "name": "h1"
-                    },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "query",
-                        "name": "q2"
-                    },
-                    {
-                        "schema": {
-                            "type": "number"
-                        },
-                        "in": "header",
-                        "name": "h2",
-                        "required": true
                     }
+                },
+                "tags": [
+                    "parking"
+                ],
+                "description": "parking create"
+            }
+        },
+        "/device-camera": {
+            "get": {
+                "summary": "device list",
+                "tags": [
+                    "device-camera"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "brand": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "brand"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "device-camera-list",
+                "description": "get-device-camera",
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "query",
+                    "name": "door",
+                    "required": true
+                }]
+            },
+            "parameters": [],
+            "post": {
+                "summary": "greate camera",
+                "operationId": "device-camera-create",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "greate camera",
+                "tags": [
+                    "device-camera"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "door": {
+                                        "type": "string"
+                                    },
+                                    "brand": {
+                                        "type": "string"
+                                    },
+                                    "config": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "door",
+                                    "brand",
+                                    "config"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/door": {
+            "get": {
+                "summary": "хаалга жагсаалт авах",
+                "tags": [
+                    "door"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "note": {
+                                            "type": "string"
+                                        },
+                                        "io": {
+                                            "type": "string",
+                                            "enum": [
+                                                "in",
+                                                "out"
+                                            ]
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "io",
+                                        "id",
+                                        "created_at"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "doorList by parking",
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "query",
+                    "name": "parking",
+                    "required": true
+                }],
+                "description": "хаалга жагсаалт авах"
+            },
+            "post": {
+                "summary": "хаалга үүсгэх",
+                "operationId": "doorCreate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "id"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "parking": {
+                                        "type": "string"
+                                    },
+                                    "io": {
+                                        "type": "string",
+                                        "enum": [
+                                            "in",
+                                            "out"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "parking",
+                                    "io"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "description": "хаалга үүсгэх",
+                "tags": [
+                    "door"
+                ]
+            }
+        },
+        "/door/{id}": {
+            "parameters": [{
+                "schema": {
+                    "type": "string"
+                },
+                "name": "id",
+                "in": "path",
+                "required": true
+            }],
+            "get": {
+                "summary": "хаалга мэдээлэл авах",
+                "tags": [
+                    "door"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "note": {
+                                            "type": "string"
+                                        },
+                                        "parking": {
+                                            "type": "string"
+                                        },
+                                        "io": {
+                                            "type": "string",
+                                            "enum": [
+                                                "in",
+                                                "out"
+                                            ]
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "required": [
+                                        "name",
+                                        "note",
+                                        "parking",
+                                        "io",
+                                        "created_at"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "door get",
+                "description": "хаалга мэдээлэл авах"
+            },
+            "post": {
+                "summary": "хаалга засах",
+                "operationId": "door update",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "хаалга засах",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "note": {
+                                        "type": "string"
+                                    },
+                                    "io": {
+                                        "type": "string",
+                                        "enum": [
+                                            "in",
+                                            "out"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "door"
                 ]
             },
-            "parameters": [{
-                    "schema": {
-                        "type": "string"
-                    },
-                    "name": "p2",
-                    "in": "path",
-                    "required": true
-                },
-                {
-                    "schema": {
-                        "type": "string"
-                    },
-                    "name": "p1",
-                    "in": "path",
-                    "required": true
-                }
-            ]
-        },
-        "/qparam-test": {
-            "get": {
-                "summary": "Your GET endpoint",
-                "tags": [],
-                "responses": {},
-                "operationId": "get-qparam-test",
-                "description": "aa",
-                "parameters": [{
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "query",
-                        "name": "p2",
-                        "required": true
-                    },
-                    {
-                        "schema": {
-                            "type": "string"
-                        },
-                        "in": "query",
-                        "name": "q1"
+            "delete": {
+                "summary": "хаалт устгах",
+                "operationId": "door-delete",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
                     }
+                },
+                "description": "хаалт устгах",
+                "tags": [
+                    "door"
+                ]
+            }
+        },
+        "/device-camera/{id}": {
+            "parameters": [{
+                "schema": {
+                    "type": "string"
+                },
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "camera id"
+            }],
+            "get": {
+                "summary": "get camera data",
+                "tags": [
+                    "device-camera"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "conf": {
+                                            "type": "object"
+                                        },
+                                        "door": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "brand",
+                                        "conf",
+                                        "door"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "device-camera-get",
+                "description": "get camera data"
+            },
+            "post": {
+                "summary": "camera update",
+                "operationId": "device-camera-update",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "camera update",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "brand": {
+                                        "type": "string"
+                                    },
+                                    "conf": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "device-camera"
+                ]
+            },
+            "delete": {
+                "summary": "delete camera",
+                "operationId": "delete-device-delete",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "delete camera",
+                "tags": [
+                    "device-camera"
+                ]
+            }
+        },
+        "/device-gate": {
+            "get": {
+                "summary": "gete by door",
+                "tags": [
+                    "device-gate"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "brand": {
+                                                "type": "string"
+                                            },
+                                            "door": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "brand",
+                                            "door"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "get-device-gate",
+                "description": "gete by door",
+                "parameters": [{
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "query",
+                    "name": "door",
+                    "required": true
+                }]
+            },
+            "post": {
+                "summary": "update door",
+                "operationId": "device-gate-update",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "update door",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "config": {
+                                        "type": "object"
+                                    },
+                                    "brand": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "device-gate"
+                ]
+            }
+        },
+        "/device-gate/{id}": {
+            "parameters": [{
+                "schema": {
+                    "type": "string"
+                },
+                "name": "id",
+                "in": "path",
+                "required": true
+            }],
+            "get": {
+                "summary": "get gate data",
+                "tags": [
+                    "device-gate"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "brand": {
+                                            "type": "string"
+                                        },
+                                        "config": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "brand",
+                                        "config"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "operationId": "device-gate-get",
+                "description": "get gate data"
+            },
+            "post": {
+                "summary": "update gate",
+                "operationId": "device-gate-update",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flag": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "flag"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "update gate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "brand": {
+                                        "type": "string"
+                                    },
+                                    "config": {
+                                        "type": "object"
+                                    }
+                                },
+                                "required": [
+                                    "brand"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "device-gate"
+                ]
+            },
+            "delete": {
+                "summary": "delete gate",
+                "operationId": "device-gate-delete",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        ""
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "delete gate",
+                "tags": [
+                    "device-gate"
                 ]
             }
         }
     },
     "components": {
-        "schemas": {
-            "Success": {
-                "title": "Success",
-                "type": "object",
-                "description": "test model",
-                "properties": {
-                    "flag": {
-                        "type": "boolean"
-                    },
-                    "n1": {
-                        "type": "number"
-                    },
-                    "n2": {
-                        "type": "integer"
-                    },
-                    "n3": {
-                        "type": "boolean"
-                    },
-                    "n4": {
-                        "type": "null"
-                    },
-                    "n5": {
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "n6": {
-                        "type": "array",
-                        "items": {}
-                    },
-                    "n7": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "dd": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "n8": {
-                        "$ref": "#/components/schemas/Item"
-                    },
-                    "n9": {
-                        "title": "TestSingle",
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "type": "string"
-                            },
-                            "haha": {
-                                "type": "string"
-                            }
-                        },
-                        "description": "haha"
-                    }
-                },
-                "required": [
-                    "flag",
-                    "n2",
-                    "n3",
-                    "n4",
-                    "n8"
-                ]
-            },
-            "Item": {
-                "title": "Item",
-                "type": "object",
-                "description": "arr item",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id",
-                    "name"
-                ]
-            },
-            "aaa": {
-                "title": "Aaa",
-                "type": "object",
-                "description": "hjh",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "aad": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "id"
-                ]
-            }
-        }
+        "schemas": {}
     }
 }

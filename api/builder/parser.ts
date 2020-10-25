@@ -56,6 +56,10 @@ export class OpenAPIV3Parser {
                     schema.required.push(p.name)
                 }
                 schema.properties[p.name] = p.schema;
+                if(! (p.schema as OpenAPIV3.ReferenceObject).$ref){
+                    (schema.properties[p.name] as OpenAPIV3.NonArraySchemaObject).description = p.description
+                }
+                
             }
         }
 
@@ -122,6 +126,10 @@ export class OpenAPIV3Parser {
 
             endpoint.paramPath = paramPath;
 
+            if(oprationObject.tags && Array.isArray(oprationObject.tags) && oprationObject.tags.length >0){
+                endpoint.tags = oprationObject.tags;
+            }
+
             if (oprationObject.responses) {
                 endpoint.response = this.schemaByResponsesObject({ ...info, scope: 'resp' }, oprationObject.responses) || undefined;
             }
@@ -140,6 +148,8 @@ export class OpenAPIV3Parser {
             endpoint.updateIsMultParam();
 
             return endpoint;
+        }else {
+            console.warn("ignore operation. not found operationId ", info)
         }
 
         return null;

@@ -1,4 +1,5 @@
 import { IMiddleware, IResponseFilter, IErrorHandle } from "./common";
+import { AHandler } from "./action";
 
 export interface IModuleOption {
     logger?: (level: string, message: string, dta: object) => void;
@@ -6,6 +7,8 @@ export interface IModuleOption {
     befores?: IMiddleware[];
 
     responseFilters?: IResponseFilter[];
+
+    actions?: AHandler<any, any>[];
 }
 
 export interface IModule {

@@ -6,7 +6,13 @@ export class AModule implements IModule {
     constructor(
         private name: string,
         private opt: IModuleOption
-    ) { }
+    ) {
+        if (opt.actions) {
+            for (let h of opt.actions) {
+                this._register(h);
+            }
+        }
+    }
 
     private _handlers = new Map<string, AHandlerWrap<any, any>>();
     register(...handlers: AHandler<any, any>[]) {

@@ -1,4 +1,4 @@
-import { AInterface, HttpParam } from "@napp/api-core";
+import { AInterface, HttpParam, METHOD } from "@napp/api-core";
 import { IValidation, IMiddleware, IAction, IContext, IFilterParam, IErrorHandle } from "./common";
 import { AModule } from "./module";
 import { OAPIHandler } from "./action.common";
@@ -48,7 +48,7 @@ export class AHandlerWrap<REQ, RES> {
         return this.meta.path || '/' + this.meta.name;
     }
 
-    get method() {
+    get method(): METHOD {
         return this.meta.method || 'get';
     }
     getBefores() {

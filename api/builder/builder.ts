@@ -3,19 +3,17 @@ import { OpenAPIV3 } from "openapi-types";
 
 
 import { Project, ScriptTarget, VariableDeclarationKind, InterfaceDeclaration, NamespaceDeclaration, ts, printNode, WriterFunction, CodeBlockWriter, SourceFile } from "ts-morph";
-import { ApiEndpoint, updateSchema, ApiModel } from "./common";
+import { ApiEndpoint, updateSchema, ApiModel, nameConvert, ILogger } from "./common";
 import { OpenAPIV3Parser } from "./parser";
 import { readFileSync } from "fs";
 import { join as pathJoin } from "path";
 
-const jsConvert = require('js-convert-case');
-
 export interface OApiBuilder {
     file: string;
-
-
     outDir: string;
-    namespace?: string
+    prefix?: string
+
+    log?: ILogger
 }
 export class ApiBuilder {
 
@@ -23,11 +21,16 @@ export class ApiBuilder {
     endpoints: ApiEndpoint[];
     apiDocument: OpenAPIV3.Document;
 
+    logger: ILogger = (l, m) => console.log(l, '>>', m);
+
     project = new Project({
         compilerOptions: {
             // useInMemoryFileSystem: true
         }
     });
+
+    componentName: string;
+    prefix: string;
 
     constructor(private opt: OApiBuilder) {
         let jsonStr = readFileSync(this.opt.file).toString();
@@ -35,25 +38,40 @@ export class ApiBuilder {
         let { components, endpoints } = new OpenAPIV3Parser(json).parse();
         this.components = components;
         this.endpoints = endpoints;
+
+        this.prefix = (opt.prefix || 'Napi');
+        this.componentName = nameConvert([this.prefix, 'component']);
+
+        if(opt.log) {
+            this.logger = opt.log;
+        }
     }
 
     buildComponents() {
+        
         let src = this.project.createSourceFile(pathJoin(this.opt.outDir, 'components.ts'), undefined, { overwrite: true });
         {
             let nsComponents = src.addNamespace({
-                name: "Components",
+                name: this.componentName,
                 isExported: true
             });
 
             let schemas = this.components.schemas || {};
             for (let k of Object.keys(schemas)) {
 
+                this.logger('info', `"${k}" component building start`)
                 let iSchema = nsComponents.addInterface({
                     name: k,
                     isExported: true
                 });
 
-                updateSchema(iSchema, schemas[k])
+                updateSchema({
+                    arrItemObjectName: k,
+                    componentName: this.componentName,
+                    intr: iSchema,
+                    schema: schemas[k],
+                    logger : this.logger
+                })
             }
         }
 
@@ -62,24 +80,30 @@ export class ApiBuilder {
     }
 
     buildEndponts(hasNappApi: boolean) {
-        let src = this.project.createSourceFile(pathJoin(this.opt.outDir, 'endpoints.ts'), undefined, { overwrite: true });
+        let src = this.project.createSourceFile(pathJoin(this.opt.outDir, 'index.ts'), undefined, { overwrite: true });
         src.addImportDeclaration({
             namedImports: ["AInterface", "HttpParam"],
             moduleSpecifier: "@napp/api-core",
             // moduleSpecifier: "../core",
         });
         src.addImportDeclaration({
-            namedImports: ["Components"],
+            namedImports: [this.componentName],
             moduleSpecifier: "./components",
-        });
-
-        let nsContiner = src.addNamespace({
-            name: this.opt.namespace || 'nappi',
-            isExported: true
-        });
+        });     
 
         for (let it of this.endpoints) {
-            this.buildEndpoint(nsContiner, it, hasNappApi)
+            if (it.tags) {
+                let nsName = nameConvert([this.prefix, it.tags[0]]);
+                let nsObj = src.getNamespace(nsName);
+                if (!nsObj) {
+                    nsObj = src.addNamespace({ name: nsName, isExported: true })
+                }
+
+                this.logger('info', `"${nsName}" endpint start. [${it.method}] ${it.path}`);
+                this.buildEndpoint(nsObj, it, hasNappApi)
+            } else {
+                console.log('ignore endpoint. not found tag', { path: it.path, method: it.method })
+            }
         }
 
         return this;
@@ -112,7 +136,15 @@ export class ApiBuilder {
                     let intr = namespace.addInterface({
                         name: `ParamPath`, isExported: true
                     });
-                    endpoint.paramPath.build(intr);
+
+                    updateSchema({
+                        arrItemObjectName: 'path',
+                        componentName: this.componentName,
+                        intr: intr,
+                        schema: endpoint.paramPath.schema,
+                        logger : this.logger
+                    })
+
                     iRequ.addProperty({ name: 'path', type: 'ParamPath' });
 
                     iPath = { intr, multi: true };
@@ -121,7 +153,13 @@ export class ApiBuilder {
                     let intr = namespace.addInterface({
                         name: `ParamQuery`, isExported: true
                     });
-                    endpoint.paramQuery.build(intr);
+                    updateSchema({
+                        arrItemObjectName: 'query',
+                        componentName: this.componentName,
+                        intr: intr,
+                        schema: endpoint.paramQuery.schema,
+                        logger : this.logger
+                    });
                     iRequ.addProperty({ name: 'query', type: 'ParamQuery' });
                     iQuery = { intr, multi: true };
                 }
@@ -136,7 +174,15 @@ export class ApiBuilder {
                     let intr = namespace.addInterface({
                         name: `ParamBody`, isExported: true
                     });
-                    endpoint.paramBody.build(intr);
+
+                    updateSchema({
+                        arrItemObjectName: 'body',
+                        componentName: this.componentName,
+                        intr: intr,
+                        schema: endpoint.paramBody.schema,
+                        logger : this.logger
+                    });
+
                     iRequ.addProperty({ name: 'body', type: 'ParamBody' })
 
                     iBody = { intr, multi: true };
@@ -145,15 +191,36 @@ export class ApiBuilder {
 
             } else {
                 if (endpoint.paramBody) {
-                    endpoint.paramBody.build(iRequ);
+
+                    updateSchema({
+                        arrItemObjectName: 'request',
+                        componentName: this.componentName,
+                        intr: iRequ,
+                        schema: endpoint.paramBody.schema,
+                        logger : this.logger
+                    });
                     iBody = { intr: iRequ, multi: true };
                 }
                 if (endpoint.paramPath) {
-                    endpoint.paramPath.build(iRequ);
+
+                    updateSchema({
+                        arrItemObjectName: 'request',
+                        componentName: this.componentName,
+                        intr: iRequ,
+                        schema: endpoint.paramPath.schema,
+                        logger : this.logger
+                    });
                     iPath = { intr: iRequ, multi: false };
                 }
                 if (endpoint.paramQuery) {
-                    endpoint.paramQuery.build(iRequ);
+
+                    updateSchema({
+                        arrItemObjectName: 'request',
+                        componentName: this.componentName,
+                        intr: iRequ,
+                        schema: endpoint.paramQuery.schema,
+                        logger : this.logger
+                    });
                     iQuery = { intr: iRequ, multi: false };
                 }
 
@@ -169,7 +236,14 @@ export class ApiBuilder {
             });
 
             if (endpoint.response) {
-                endpoint.response.build(iResp)
+                updateSchema({
+                    arrItemObjectName: 'result',
+                    componentName: this.componentName,
+                    intr: iResp,
+                    schema: endpoint.response.schema,
+                    logger : this.logger
+                });
+
             }
         }
 
