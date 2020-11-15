@@ -1,16 +1,16 @@
-import { Encryption, EncryptionError, EncryptionTimeoutError } from '../src';
+import { Encryption, EncryptionTimeoutError } from '../src';
 
 async function sleep(ms: number) {
     return await new Promise<void>(resolve => setTimeout(() => resolve(), ms));
 }
 
-async function test(algo: 'gcm' | 'cbc') {
-    let t1 = new Encryption("1234", algo);
+async function test() {
+    let t1 = new Encryption("1234", {saltLength : 15});
 
     {
         let val = "sain uu. ҮШз";
         let t = t1.encrypt(val);
-        let v = t1.decrypt(t);
+        let v = t1.decript(t);
 
         if (val === v) {
             console.log("success encrypt & decrypt")
@@ -64,13 +64,7 @@ async function test(algo: 'gcm' | 'cbc') {
 }
 
 
-test('cbc')
-    .then(() => {
-        console.log("done cbc")
-    })
-    .then(() => {
-        return test('gcm')
-            .then(() => console.log("done gcm"))
-    })
+test()
     .catch(err => console.log(err))
+
 

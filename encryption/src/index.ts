@@ -1,11 +1,6 @@
 import crypto from 'crypto';
 
 
-const ivLength = 16;
-const saltLength = 64;
-const tagLength = 16;
-const tagPosition = saltLength + ivLength;
-const encryptedPosition = tagPosition + tagLength;
 
 export class EncryptionError extends Error {
     name = "EncryptionError"
@@ -19,118 +14,56 @@ export class EncryptionTimeoutError extends EncryptionError {
         super(message);
     }
 }
+
+interface OEncryption {
+    /**
+     * default value 8
+     */
+    saltLength?: number
+}
 export class Encryption {
-    constructor(private secret: string, private algorithm: 'gcm' | 'cbc') {
-        if (!secret || typeof secret !== 'string') {
-            throw new EncryptionError('secret must be a non-0-length string');
-        }
+
+    private ivLength: number = 16;
+    private saltLength: number
+    constructor(private pass: string, { saltLength }: OEncryption) {
+        this.saltLength = saltLength || 8;
     }
     private getKey(salt: Buffer) {
-        return crypto.scryptSync(this.secret, salt, 32);
+        return crypto.pbkdf2Sync(this.pass, salt, 20000, 32, 'sha256');
+    }
+    encrypt(value: string) {
+        try {
+
+
+            let iv = crypto.randomBytes(this.ivLength);
+            let salt = crypto.randomBytes(this.saltLength);
+
+            let key = this.getKey(salt);
+
+            let cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+
+
+
+            let encrypted = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);
+            return Buffer.concat([salt, iv, encrypted]).toString('hex');
+        } catch (error) {
+            throw new EncryptionError((error && error.message) || 'cannot encrypt data');
+        }
     }
 
-    private encryptGCM(value: string) {
-        try {
-            let iv = crypto.randomBytes(ivLength);
-            let salt = crypto.randomBytes(saltLength);
-
-            let key = this.getKey(salt);
-
-            let cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-            let encrypted = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);
-
-            let tag = cipher.getAuthTag();
-
-            return Buffer.concat([salt, iv, tag, encrypted]).toString('hex');
-        } catch (error) {
-            throw new EncryptionError(error.message)
-        }
-
-
-    };
-
-    private decryptGCM(value: string) {
-        try {
-            let stringValue = Buffer.from(value, 'hex');
-
-            let salt = stringValue.slice(0, saltLength);
-            let iv = stringValue.slice(saltLength, tagPosition);
-            let tag = stringValue.slice(tagPosition, encryptedPosition);
-            let encrypted = stringValue.slice(encryptedPosition);
-
-            let key = this.getKey(salt);
-
-            let decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-
-            decipher.setAuthTag(tag);
-
-            return decipher.update(encrypted) + decipher.final('utf8');
-        } catch (error) {
-            throw new EncryptionError(error.message)
-        }
-
-
-    };
-
-    private encryptCBC(value: string) {
-        try {
-
-        } catch (error) {
-            throw new EncryptionError(error.message)
-        }
-        let iv = crypto.randomBytes(ivLength);
-        let key = this.getKey(Buffer.from('salt'));
-
-        let cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-        let encrypted = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);
-
-        return Buffer.concat([iv, encrypted]).toString('hex');
-    };
-
-    private decryptCBC(value: string) {
-
+    decript(value: string) {
         try {
             let stringValue = Buffer.from(String(value), 'hex');
+            let salt = stringValue.slice(0, this.saltLength);
+            let iv = stringValue.slice(this.saltLength, this.saltLength + this.ivLength);
+            let encrypted = stringValue.slice(this.saltLength + this.ivLength);
 
-
-            let iv = stringValue.slice(0, ivLength);
-
-            let encrypted = stringValue.slice(ivLength);
-
-            let key = this.getKey(Buffer.from('salt'));
-
+            let key = this.getKey(salt);
             let decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
 
-            return decipher.update(encrypted) + decipher.final('utf8');
+            return decipher.update(encrypted).toString('utf8') + decipher.final('utf8');
         } catch (error) {
-            throw new EncryptionError(error.message)
-        }
-    };
-
-
-    encrypt(value: string) {
-        if (value == null || value == undefined) {
-            throw new EncryptionError('value must not be null or undefined');
-        }
-        if (this.algorithm == 'cbc') {
-            return this.encryptCBC(value);
-        } else if (this.algorithm == 'gcm') {
-            return this.encryptGCM(value);
-        } else {
-            throw new EncryptionError('not support algorithm')
-        }
-    }
-
-    decrypt(value: string) {
-        if (value == null || value == undefined) {
-            throw new EncryptionError('value must not be null or undefined');
-        }
-        if (this.algorithm == 'cbc') {
-            return this.decryptCBC(value);
-        } else if (this.algorithm == 'gcm') {
-            return this.decryptGCM(value);
-        } else {
-            throw new EncryptionError('not support algorithm')
+            throw new EncryptionError((error && error.message) || 'cannot decript data');
         }
     }
 
@@ -155,7 +88,7 @@ export class Encryption {
         }
 
         try {
-            let _v = this.decrypt(value);
+            let _v = this.decript(value);
             let _o = JSON.parse(_v);
             if (typeof _o === 'object') {
                 return _o as T;
