@@ -19,14 +19,21 @@ interface OEncryption {
     /**
      * default value 8
      */
-    saltLength?: number
+    saltLength?: number;
+
+    /**
+     * default value hex
+     */
+    format?:'hex' | 'base64';
 }
 export class Encryption {
 
     private ivLength: number = 16;
-    private saltLength: number
-    constructor(private pass: string, { saltLength }: OEncryption) {
+    private saltLength: number;
+    private format:'hex' | 'base64';
+    constructor(private pass: string, { saltLength, format }: OEncryption) {
         this.saltLength = saltLength || 8;
+        this.format = format || 'hex'
     }
     private getKey(salt: Buffer) {
         return crypto.pbkdf2Sync(this.pass, salt, 20000, 32, 'sha256');
@@ -45,7 +52,7 @@ export class Encryption {
 
 
             let encrypted = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);
-            return Buffer.concat([salt, iv, encrypted]).toString('hex');
+            return Buffer.concat([salt, iv, encrypted]).toString(this.format);
         } catch (error) {
             throw new EncryptionError((error && error.message) || 'cannot encrypt data');
         }
@@ -53,7 +60,7 @@ export class Encryption {
 
     decript(value: string) {
         try {
-            let stringValue = Buffer.from(String(value), 'hex');
+            let stringValue = Buffer.from(String(value), this.format);
             let salt = stringValue.slice(0, this.saltLength);
             let iv = stringValue.slice(this.saltLength, this.saltLength + this.ivLength);
             let encrypted = stringValue.slice(this.saltLength + this.ivLength);
