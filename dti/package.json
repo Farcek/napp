@@ -1,0 +1,28 @@
+{
+  "name": "@napp/dti",
+  "version": "2.0.2",
+  "description": "data transaction interface core library",
+  "dependencies": {
+    "cpy": "^8.1.1",
+    "cross-fetch": "^3.0.6",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "tsc": "tsc",
+    "upversion": "npm version patch",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.json",
+    "postbuild": "node build.mjs",
+    "push:core": "cd dist/core & npm publish --access=public",
+    "push:server": "cd dist/client & npm publish --access=public",
+    "push:client": "cd dist/server & npm publish --access=public",
+    "prepush": "npm run upversion & npm run build",
+    "push": "npm run push:core & npm run push:server & npm run push:client",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

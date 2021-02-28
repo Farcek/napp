@@ -1,0 +1,1 @@
+export type METHOD = 'get' | 'post' | 'put' | 'patch' | 'delete';
