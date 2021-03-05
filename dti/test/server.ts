@@ -1,7 +1,7 @@
 import { ServerAdapterFactory } from "@napp/dti-server/index";
 import { Test01Dti } from "./dti";
 
-const server = new ServerAdapterFactory()
+const server = new ServerAdapterFactory((level, message) => console.log(level, message))
 
     ;
 

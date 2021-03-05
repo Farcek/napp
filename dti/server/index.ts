@@ -70,6 +70,9 @@ class ServerAdapter implements IServerAdapter {
 
 }
 
+interface Logger {
+    (level: string, message: string): void
+}
 export class ServerAdapterFactory {
     private actions: Array<ServerMethod<any, any>> = [];
     public adapter = new ServerAdapter(this.actions);
@@ -77,6 +80,11 @@ export class ServerAdapterFactory {
 
     private queryParamParser?: (req: any) => any;
     private bodyParamParser?: (req: any) => any;
+
+    private logger: Logger;
+    constructor(logger: Logger) {
+        this.logger = logger;
+    }
 
     setBodyParserByJson(parser: IMiddleware) {
         this.bodyParserByJson = parser;
@@ -107,9 +115,9 @@ export class ServerAdapterFactory {
     }
 
     private callAction(it: ServerMethod<any, any>, param: any, req: any, res: any, next: any) {
-        if(it.validateHandle) {
+        if (it.validateHandle) {
             try {
-                it.validateHandle(param)    
+                it.validateHandle(param)
             } catch (error) {
                 return next(error);
             }
@@ -158,7 +166,10 @@ export class ServerAdapterFactory {
                     let param = this.paramsByPost(req);
                     this.callAction(it, param, req, res, next);
                 }])
+            } else {
+                this.logger('warn', `not supored method. "${it.method}"`)
             }
+            this.logger('info', `[${it.method}] ${it.path}`)
         }
 
         return route;
