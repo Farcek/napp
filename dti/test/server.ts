@@ -25,7 +25,14 @@ function setup() {
     let express: any = '';
     let app: any = '';
 
-
+    server.addNativeRoute((route: any) => {
+        route.get('/', (req: any, res: any) => {
+            
+        })
+        return {
+            name: 'test'
+        }
+    })
 
     app.user('/path', server.setup(express.router()))
 }

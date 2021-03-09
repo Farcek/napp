@@ -70,12 +70,17 @@ class ServerAdapter implements IServerAdapter {
 
 }
 
-interface Logger {
+export interface Logger {
     (level: string, message: string): void
+}
+export interface IRouteFactory {
+    (route: any): { name: string }
 }
 export class ServerAdapterFactory {
     private actions: Array<ServerMethod<any, any>> = [];
+    private routes: Array<IRouteFactory> = [];
     public adapter = new ServerAdapter(this.actions);
+
     private bodyParserByJson?: IMiddleware;
 
     private queryParamParser?: (req: any) => any;
@@ -97,6 +102,11 @@ export class ServerAdapterFactory {
     }
     setBodyParamParser(parser: (req: any) => any) {
         this.bodyParamParser = parser;
+        return this;
+    }
+
+    addNativeRoute(factory: IRouteFactory) {
+        this.routes.push(factory)
         return this;
     }
 
@@ -170,6 +180,11 @@ export class ServerAdapterFactory {
                 this.logger('warn', `not supored method. "${it.method}"`)
             }
             this.logger('info', `[${it.method}] ${it.path}`)
+        }
+
+        for (let it of this.routes) {
+            let { name } = it(_route);
+            this.logger('info', `register native route "${name}"`)
         }
 
         return route;
