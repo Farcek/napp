@@ -1,13 +1,17 @@
-import { IServerAdapter, IServerBuilder, IServerMethod, METHOD, IMiddleware, IAction } from "@napp/dti-core";
+import { IServerAdapter, IServerBuilder, IServerMethod, METHOD, IMiddleware, IAction, IParamParser } from "@napp/dti-core";
+import { DTIResponse } from "./response";
 
 class ServerMethod<REQ, RES> implements IServerMethod<REQ, RES> {
 
     beforeFuncs?: Array<IMiddleware>;
     actionFunc?: IAction<REQ, RES>;
+    paramParser?: IParamParser<REQ>;
     constructor(
         public method: METHOD,
         public path: string,
         public validateHandle: ((param: REQ) => void) | undefined,
+        public paramParseHandle: IParamParser<REQ> | undefined,
+
         actions: Array<ServerMethod<any, any>>
     ) {
         actions.push(this);
@@ -24,7 +28,8 @@ class ServerMethod<REQ, RES> implements IServerMethod<REQ, RES> {
 }
 
 class ServerBuilder<REQ, RES> implements IServerBuilder<REQ, RES> {
-    validateHandle?: (param: REQ) => void
+    validateHandle?: (param: REQ) => void;
+    paramParserHandle?: IParamParser<REQ>;
     constructor(
         private method: METHOD,
         private path: string,
@@ -34,12 +39,21 @@ class ServerBuilder<REQ, RES> implements IServerBuilder<REQ, RES> {
     ) {
 
     }
+    paramParser(handle: IParamParser<REQ>) {
+        this.paramParserHandle = handle;
+        return this;
+    }
     valid(handle: (param: REQ) => void) {
         this.validateHandle = handle;
         return this;
     };
     factory() {
-        return new ServerMethod<REQ, RES>(this.method, this.path, this.validateHandle, this.actions)
+        return new ServerMethod<REQ, RES>(
+            this.method,
+            this.path,
+            this.validateHandle,
+            this.paramParserHandle,
+            this.actions)
     };
 }
 
@@ -110,14 +124,20 @@ export class ServerAdapterFactory {
         return this;
     }
 
-    private paramsByGet(req: any) {
+    private paramsByGet(req: any, sm: ServerMethod<any, any>) {
+        if (sm.paramParseHandle) {
+            return sm.paramParseHandle(req);
+        }
         if (this.queryParamParser) {
             return this.queryParamParser(req);
         }
         return req.query || {}
     }
 
-    private paramsByPost(req: any) {
+    private paramsByPost(req: any, sm: ServerMethod<any, any>) {
+        if (sm.paramParseHandle) {
+            return sm.paramParseHandle(req);
+        }
         if (this.bodyParamParser) {
             return this.bodyParamParser(req);
         }
@@ -135,7 +155,13 @@ export class ServerAdapterFactory {
         if (it.actionFunc) {
             return it.actionFunc(param || {}, { req, res })
                 .then(rsu => {
-                    res.json(rsu)
+                    if (rsu instanceof DTIResponse) {
+                        if (rsu.handle) {
+                            return rsu.handle(res);
+                        }
+                        return;
+                    }
+                    return res.json(rsu);
                 })
                 .catch(err => next(err));
         }
@@ -150,30 +176,30 @@ export class ServerAdapterFactory {
             let befores = it.beforeFuncs || [];
             if (it.method == 'get') {
                 _route.get(it.path, [...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByGet(req);
+                    let param = this.paramsByGet(req, it);
                     this.callAction(it, param, req, res, next);
                 }])
             } else if (it.method == 'delete') {
                 _route.delete(it.path, [...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByGet(req);
+                    let param = this.paramsByGet(req, it);
                     this.callAction(it, param, req, res, next);
                 }])
             } else if (it.method == 'post') {
                 let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
                 _route.post(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByPost(req);
+                    let param = this.paramsByPost(req, it);
                     this.callAction(it, param, req, res, next);
                 }])
             } else if (it.method == 'put') {
                 let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
                 _route.put(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByPost(req);
+                    let param = this.paramsByPost(req, it);
                     this.callAction(it, param, req, res, next);
                 }])
             } else if (it.method == 'patch') {
                 let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
                 _route.patch(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByPost(req);
+                    let param = this.paramsByPost(req, it);
                     this.callAction(it, param, req, res, next);
                 }])
             } else {

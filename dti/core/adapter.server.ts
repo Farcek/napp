@@ -6,6 +6,11 @@ export interface IAction<REQ, RES> {
     (param: REQ, ctx: { req: any, res: any }): Promise<RES>;
 }
 
+export interface IParamParser<REQ> {
+    (req: any): REQ;
+}
+
+
 
 export interface IServerMethod<REQ, RES> {
     before: (befores: Array<IMiddleware>) => IServerMethod<REQ, RES>;
@@ -14,7 +19,7 @@ export interface IServerMethod<REQ, RES> {
 
 export interface IServerBuilder<REQ, RES> {
     valid: (handle: (param: REQ) => void) => IServerBuilder<REQ, RES>;
-
+    paramParser : (handle: IParamParser<REQ>) => IServerBuilder<REQ, RES>;
     factory: () => IServerMethod<REQ, RES>;
 }
 export interface IServerAdapter {

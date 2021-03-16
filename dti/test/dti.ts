@@ -1,4 +1,4 @@
-import { IClientAdapter, IServerAdapter, IOrder as BaseOrder, OrderType , IPager } from "@napp/dti-core/index";
+import { IClientAdapter, IServerAdapter, IOrder as BaseOrder, OrderType, IPager } from "@napp/dti-core/index";
 
 
 export namespace Test01Dti {
@@ -31,7 +31,7 @@ export namespace Test01Dti {
     }
 
     export interface Resu {
-        category:string;
+        category: string;
         total: number;
         items: Array<IItem>;
     }
@@ -54,6 +54,11 @@ export namespace Test01Dti {
 
         return adp
             .get<Requ, Resu>(path)
+            .paramParser((req) => {
+                return {
+
+                } as Requ;
+            })
             .valid((param) => {
                 if (!param.category) {
                     throw new Error('not found category by server')
