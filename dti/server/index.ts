@@ -1,5 +1,5 @@
 import { IServerAdapter, IServerBuilder, IServerMethod, METHOD, IMiddleware, IAction, IParamParser } from "@napp/dti-core";
-import { DTIResponse } from "./response";
+import { DtiResponse } from "./response";
 
 class ServerMethod<REQ, RES> implements IServerMethod<REQ, RES> {
 
@@ -155,7 +155,7 @@ export class ServerAdapterFactory {
         if (it.actionFunc) {
             return it.actionFunc(param || {}, { req, res })
                 .then(rsu => {
-                    if (rsu instanceof DTIResponse) {
+                    if (rsu instanceof DtiResponse) {
                         if (rsu.handle) {
                             return rsu.handle(res);
                         }
@@ -216,4 +216,8 @@ export class ServerAdapterFactory {
         return route;
     }
 
+}
+
+export {
+    DtiResponse
 }
