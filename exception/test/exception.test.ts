@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { suite, test } from "mocha-typescript";
+import { suite, test } from "@testdeck/mocha";
 
 import { assert } from "chai";
-import { Exception, ExceptionConvert } from "../src";
+import { Exception } from "../src";
 
 
 @suite
@@ -15,22 +15,20 @@ class ExceptionAction {
         assert.equal(e.name, "Exception")
 
     }
+    
+
     @test
-    async call1() {
+    async basicConver() {
 
-        try {
-            testMsg1();
-        } catch (error) {
+        let e = new Exception("Err1","msg1");
 
-            let ex = ExceptionConvert(error);
+        let str =  JSON.stringify(e);
 
-            assert.instanceOf(ex, Exception);
-            assert.equal(ex.message, "msg2");
-        }
+        let e1 = Exception.from(JSON.parse(str));
+
+        assert.equal(e.message, e1.message)
+        assert.equal(e.name, e1.name)
+
     }
-
 }
 
-function testMsg1() {
-    throw new Exception("Exception","msg2")
-}

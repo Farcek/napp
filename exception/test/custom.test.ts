@@ -1,16 +1,24 @@
 import 'reflect-metadata';
-import { suite, test } from "mocha-typescript";
+import { suite, test } from "@testdeck/mocha";
 
 import { assert } from "chai";
-import { NotFoundException, ExceptionConvert, Exception } from "../src";
+import { Exception } from "../src";
 
 class MyError extends Exception {
-    constructor(m: string) {
-        super("MyError", m);
 
+    other: string;
+    constructor(m: string, other: string) {
+        super("MyError", m);
+        this.other = other;
     }
 
-
+    toPlan() {
+        let obj = super.toPlan();
+        return {
+            ...obj,
+            other: this.other
+        }
+    }
 }
 
 
@@ -20,35 +28,43 @@ class CustomExceptionTest {
     @test
     async basic() {
         try {
-            throw new MyError("custom1")
+            throw new MyError("custom1", "val1")
         } catch (error) {
             let err: MyError = error;
             assert.equal("MyError", err.name)
             assert.equal("custom1", err.message)
+            assert.equal("val1", err.other)
         }
     }
 
     @test
     async convert() {
-        try {
-            throw new MyError("custom2")
-        } catch (error) {
-            let err = ExceptionConvert(error);
+        let err = new MyError("custom1", "val1");
 
-            assert.instanceOf(err, MyError);
-            assert.equal("MyError", err.name)
-            assert.equal("custom2", err.message)
+        let str = JSON.stringify(err);
+
+        let obj = JSON.parse(str);
+
+        let e1 = Exception.from(obj, (obj, param) => {
+            if (param.name === 'MyError') {
+                return new MyError(param.message, obj.other)
+            }
+            return false
+        });
+
+
+
+        if (e1 instanceof MyError) {
+            assert.equal("MyError", e1.name)
+            assert.equal("custom1", e1.message)
+            assert.equal("val1", e1.other)
+        } else {
+            throw new Error('not working convert');
         }
+
+
     }
 
-    @test
-    async convert2() {
-        let src = new MyError("custom3").toJson();
-        let err = ExceptionConvert(src) ;
 
-        assert.instanceOf(err, Exception);
-        assert.equal("MyError", err.name)
-        assert.equal("custom3", err.message)
-    }
 }
 

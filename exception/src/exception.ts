@@ -1,12 +1,5 @@
-export type IExceptionDataValue = string | number | Date | boolean | null;
-export interface IExceptionData {
-    [name: string]: IExceptionDataValue | IExceptionDataValue[] | IExceptionData;
-}
-
 export class Exception extends Error {
-
     public name: string;
-    public data: IExceptionData = {};
 
     constructor(name: string, message: string) {
         super(message);
@@ -14,48 +7,40 @@ export class Exception extends Error {
         // Object.setPrototypeOf(this, Exception.prototype);
     }
 
-
-    clearData() {
-        this.data = {};
-        return this;
+    toPlan() {
+        return {
+            name: this.name,
+            message: this.message
+        }
     }
-    setData(data: IExceptionData) {
 
-        if (typeof data === 'object') {
-            let _data = data || {};
-            let keys = Object.keys(_data);
-            for (let _name of keys) {
-                let _value = _data[_name];
-                this.setDataValue(_name, _value);
+
+    toJSON() {
+        return this.toPlan();
+    }
+
+    static from(err: any, parser?: (err: any, param: { name: string, message: string }) => Exception | false) {
+        if (err instanceof Exception) {
+            return err;
+        }
+
+        if (err instanceof Error) {
+            return new Exception(err.name, err.message);
+        }
+
+        if (err && err.name && err.message) {
+            if (parser) {
+                let e = parser(err, { name: err.name, message: err.message })
+                if (e instanceof Exception) {
+                    return e;
+                }
             }
+            return new Exception(err.name, err.message);
         }
-        return this;
-    }
 
-    getDataValue(name: string) {
-        return this.data[name];
-    }
-    setDataValue(name: string, value: IExceptionDataValue | IExceptionDataValue[] | IExceptionData) {
-        this.data[name] = value;
-        return this;
-    }
+        console.error("-- not suported error handle --");
+        console.error(err);
 
-    toObject() {
-        return {
-            name: this.name,
-            message: this.message,
-            data: this.data
-        }
-    }
-
-    toJson() {
-        return this.toObject();
-    }
-
-    toNameData() {
-        return {
-            name: this.name,
-            data: this.data
-        }
+        return new Exception("Error", "please contact developer administrator");
     }
 }

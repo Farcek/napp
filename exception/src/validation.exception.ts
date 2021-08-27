@@ -1,67 +1,84 @@
-
 import { Exception } from './exception';
-
-
-
 
 export class ValidationException extends Exception {
     constructor(message: string) {
         super('validation', message);
-        this.setDataValue('status', 400);
     }
 }
 
-export interface IInvalidProperties {
-    [key: string]: string[];
-}
-export class ValidationFormException extends Exception {
 
+// export class ValidationPropertiesException extends Exception {
+//     errors: Record<string, Exception[]> = {};
+//     constructor(message: string) {
+//         super('validation-properties', message);
+//     }
 
-    constructor(message?: string, properties?: IInvalidProperties) {
-        super('validation-from', message || 'Invalid properties');
-        this.setDataValue('status', 400);
-        this.data['properties'] = properties || {};
-    }
+//     addError(property: string, error: Exception) {
+//         if (property in this.errors) {
+//             this.errors[property].push(error);
+//         } else {
+//             this.errors[property] = [error];
+//         }
+//         return this;
+//     }
 
-    get properties() {
-        return (this.data['properties'] || (this.data['properties'] = {})) as IInvalidProperties
-    }
+//     hasError() {
+//         let keys = Object.keys(this.errors);
+//         for (let it of keys) {
+//             let p = this.errors[it];
+//             if (p.length > 0) {
+//                 return true
+//             }
+//         }
+//         return false
+//     }
 
-
-    addPropertyMessage(property: string, message: string) {
-        if (property in this.properties) {
-            this.properties[property].push(message);
-        } else {
-            this.properties[property] = [message];
-        }
-        return this;
-    }
-
-    hasProperty(name: string) {
-        return name in this.properties;
-    }
-
-    getPropertyMessages(name: string) {
-        if (name in this.properties) {
-            return this.properties[name];
-        }
-        return [];
-    }
-
-    map<T>(handle: (property: string, messages: string[]) => T) {
-        return Object.keys(this.properties)
-            .map((property) => handle(property, this.properties[property]));
-    }
-
-    mapPropery<T>(property: string, handle: (message: string) => T) {
-        if (property in this.properties) {
-            return this.properties[property].map((message) => handle(message))
-        }
-        return [];
-    }
+//     hasErrorProperies(name: string) {
+//         if (name in this.errors) {
+//             return this.errors[name].length > 0
+//         }
+//         return false;
+//     }
 
 
 
+//     getProperies() {
+//         return Object.keys(this.errors)
+//     }
 
 
-}
+
+//     getErrorsByAll() {
+//         let errors: Exception[] = [];
+//         Object.keys(this.errors).map(p => {
+//             errors = [...errors, ...this.errors[p]];
+//         })
+//         return errors;
+//     }
+//     getErrorsByProperty(name: string) {
+//         if (name in this.errors) {
+//             return this.errors[name];
+//         }
+//         return [];
+//     }
+
+//     mapErrorByAll<T>(handle: (property: string, messages: Exception[]) => T) {
+//         return Object.keys(this.errors)
+//             .map((property) => handle(property, this.errors[property]));
+//     }
+
+//     mapErrorByPropery<T>(property: string, handle: (message: Exception) => T) {
+//         if (property in this.errors) {
+//             return this.errors[property].map((message) => handle(message))
+//         }
+//         return [];
+//     }
+
+//     toPlan() {
+//         let pp = super.toPlan()
+//         return {
+//             ...pp,
+//             errors: this.errors
+//         }
+//     }
+// }
