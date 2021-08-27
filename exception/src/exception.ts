@@ -1,3 +1,10 @@
+export interface IException {
+    name:string;
+    message:string;
+    
+    [p:string] : any
+}
+
 export class Exception extends Error {
     public name: string;
 
@@ -19,7 +26,10 @@ export class Exception extends Error {
         return this.toPlan();
     }
 
-    static from(err: any, parser?: (err: any, param: { name: string, message: string }) => Exception | false) {
+    private static parsers: Array<(err:IException) => Exception | false> = [];
+
+
+    static from(err: any, parser?: (err: IException) => Exception | false) {
         if (err instanceof Exception) {
             return err;
         }
@@ -30,12 +40,22 @@ export class Exception extends Error {
 
         if (err && err.name && err.message) {
             if (parser) {
-                let e = parser(err, { name: err.name, message: err.message })
+                let e = parser(err)
                 if (e instanceof Exception) {
                     return e;
                 }
             }
             return new Exception(err.name, err.message);
+        }
+
+
+        for (let p of this.parsers) {
+            if (err && err.name && err.message) {
+                let e = p(err)
+                if (e instanceof Exception) {
+                    return e;
+                }
+            }
         }
 
         console.error("-- not suported error handle --");

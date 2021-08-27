@@ -45,9 +45,9 @@ class CustomExceptionTest {
 
         let obj = JSON.parse(str);
 
-        let e1 = Exception.from(obj, (obj, param) => {
-            if (param.name === 'MyError') {
-                return new MyError(param.message, obj.other)
+        let e1 = Exception.from(obj, (err) => {
+            if (err.name === 'MyError') {
+                return new MyError(err.message, err.other)
             }
             return false
         });

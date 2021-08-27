@@ -20,7 +20,7 @@ let obj = err.toPlan();
 //      message: "msg1"
 // }
 
-let errStr = JSON.stringify()
+let errStr = JSON.stringify(err)
 // errStr output
 //
 // {
