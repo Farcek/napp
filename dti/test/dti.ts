@@ -1,70 +1,38 @@
-import { IClientAdapter, IServerAdapter, IOrder as BaseOrder, OrderType, IPager } from "@napp/dti-core/index";
+import { Dti } from "@napp/dti-core";
 
 
 export namespace Test01Dti {
 
-    export interface IOrder extends BaseOrder {
-        name?: OrderType;
-        start?: OrderType;
-        feedback?: OrderType;
-    }
-
-    export interface IFilter {
-        name?: string;
-    }
-
-
-    export interface Requ {
-        category: string;
-        filter?: IFilter;
-        order?: IOrder;
-        pager?: IPager
-    }
-
-
-    export interface IItem {
+    export interface By {
         id: string;
-        name: string;
-        image: string;
-        star: number;
-        feedback: number;
     }
+
+    export interface Body {
+        name: string;
+        age: number;
+    }
+
 
     export interface Resu {
-        category: string;
-        total: number;
-        items: Array<IItem>;
+        flag: string;
+        message: string;
     }
 
-    export const path = '/t02-list';
 
-    export function client(adp: IClientAdapter) {
-        return adp
-            .get<Requ, Resu>(path)
-            .valid((param) => {
-                if (!param.category) {
-                    throw new Error('not found category by client')
-                }
-            })
-            .factory()
-            ;
-    }
-
-    export function server(adp: IServerAdapter) {
-
-        return adp
-            .get<Requ, Resu>(path)
-            .paramParser((req) => {
-                return {
-
-                } as Requ;
-            })
-            .valid((param) => {
-                if (!param.category) {
-                    throw new Error('not found category by server')
-                }
-            })
-            .factory()
-    }
-
+    export const meta = Dti.define<Resu, By, Body>({
+        name: 'update',
+        checkQ: (q) => {
+            if (q.id || '' === '') {
+                throw new Error('id is reqyared')
+            }
+        },
+        checkB: (b) => {
+            if (b.name || '' === '') {
+                throw new Error('name is reqyared')
+            }
+            if ((b.age > 0 && b.age < 150) === false) {
+                throw new Error('check age value')
+            }
+        }
+    })
 }

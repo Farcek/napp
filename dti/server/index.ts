@@ -1,4 +1,4 @@
-import { IServerAdapter, IServerBuilder, IServerMethod, METHOD, IMiddleware, IAction, IParamParser } from "@napp/dti-core";
+import { Dti } from "@napp/dti-core";
 import { DtiResponse } from "./response";
 
 class ServerMethod<REQ, RES> implements IServerMethod<REQ, RES> {
@@ -57,7 +57,7 @@ class ServerBuilder<REQ, RES> implements IServerBuilder<REQ, RES> {
     };
 }
 
-class ServerAdapter implements IServerAdapter {
+class ServerAdapter  {
 
     constructor(private actions: Array<ServerMethod<any, any>>) {
 
@@ -178,27 +178,10 @@ export class ServerAdapterFactory {
                 _route.get(it.path, [...befores, (req: any, res: any, next: any) => {
                     let param = this.paramsByGet(req, it);
                     this.callAction(it, param, req, res, next);
-                }])
-            } else if (it.method == 'delete') {
-                _route.delete(it.path, [...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByGet(req, it);
-                    this.callAction(it, param, req, res, next);
-                }])
+                }])            
             } else if (it.method == 'post') {
                 let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
                 _route.post(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByPost(req, it);
-                    this.callAction(it, param, req, res, next);
-                }])
-            } else if (it.method == 'put') {
-                let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
-                _route.put(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
-                    let param = this.paramsByPost(req, it);
-                    this.callAction(it, param, req, res, next);
-                }])
-            } else if (it.method == 'patch') {
-                let jsonparser = this.bodyParserByJson ? [this.bodyParserByJson] : [];
-                _route.patch(it.path, [...jsonparser, ...befores, (req: any, res: any, next: any) => {
                     let param = this.paramsByPost(req, it);
                     this.callAction(it, param, req, res, next);
                 }])

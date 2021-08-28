@@ -1,22 +1,23 @@
-import { ServerAdapterFactory } from "@napp/dti-server/index";
+import { ServerAdapter } from "@napp/dti-server/index";
 import { Test01Dti } from "./dti";
 
-const server = new ServerAdapterFactory((level, message) => console.log(level, message))
+const server = new ServerAdapter((level, message) => console.log(level, message))
 
     ;
 
 
-Test01Dti.server(server.adapter)
-    .before([])
-    .handle(async ({ category, filter }) => {
-        let resp: Test01Dti.Resu = {
-            category,
-            total: 1,
-            items: []
-        };
-        return resp;
+let ins = ServerAdapter.dti(Test01Dti.meta)
+    .handle(async ({ q, b }, { }) => {
+
+
+
+
+
+        return { flag: q.id, message: `${b.name}; ${b.age}` }
     })
 
+
+server.register(ins)
 
 
 
@@ -27,13 +28,13 @@ function setup() {
 
     server.addNativeRoute((route: any) => {
         route.get('/', (req: any, res: any) => {
-            
+
         })
         return {
             name: 'test'
         }
     })
 
-    app.user('/path', server.setup(express.router()))
+    app.user('/test1', server.setup(express.router()))
 }
 

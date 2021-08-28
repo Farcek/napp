@@ -1,4 +1,4 @@
-import { DtiClientAdapter, DtiClientCaller } from "@napp/dti-client";
+import { DtiClientAdapter } from "@napp/dti-client";
 import { Test01Dti } from "./dti";
 import { fetch } from "cross-fetch";
 
@@ -9,29 +9,24 @@ export class APIError extends Error {
     }
 }
 
-function serialize(obj: any) {
-    var str = [];
-    for (var p in obj)
-        if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-    return str.join("&");
-}
 
 const baseUrl = '';
-const caller: DtiClientCaller = async (path, method, param) => {
-    try {
-        let url = (method == 'get' || method == 'delete')
-            ? `${baseUrl}${path}?${serialize(param)}`
-            : `${baseUrl}${path}`;
+const adp = new DtiClientAdapter({
+    caller: async (meta, { q, b }) => {
+
+        let url = baseUrl + meta.path;
+        if (q) {
+            url = url + '?p=' + encodeURIComponent(JSON.stringify(q))
+        }
+
         let resp = await fetch(url, {
 
-            method: method,
+            method: meta.method,
 
             headers: {
                 "Content-Type": "application/json"
             },
-            body: (method == 'post' || method == 'put' || method == 'patch') ? JSON.stringify(param || {}) : undefined
+            body: (meta.method == 'post') ? JSON.stringify(b || {}) : undefined
         });
 
         if (resp) {
@@ -90,24 +85,17 @@ const caller: DtiClientCaller = async (path, method, param) => {
         console.error(resp);
         throw new APIError('NetworkError', '!!!!!!!!! error logic !!!!!!!!!!');
 
-    } catch (error) {
-        if (error instanceof APIError) {
-            throw error;
-        }
-
-        if (error instanceof TypeError) {
-            throw new APIError(`NetworkError`, error.message);
-        }
-
-        throw new APIError('NetworkError', error);
+        
     }
-}
-
-
-
-const adp = new DtiClientAdapter(caller)
+});
 
 
 async function a() {
-    let resp = await Test01Dti.client(adp).call({ category: '11' });
+    let resp = await adp.dti(Test01Dti.meta).call({ q : {id : '0'}, b : {age : 5, name: "test"} });
+
+    
+    console.log(resp.flag)
+    
+    console.log(resp.message)
+    console.log(resp)
 }
