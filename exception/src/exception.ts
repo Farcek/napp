@@ -1,8 +1,8 @@
 export interface IException {
-    name:string;
-    message:string;
-    
-    [p:string] : any
+    name: string;
+    message: string;
+
+    [p: string]: any
 }
 
 export class Exception extends Error {
@@ -26,9 +26,11 @@ export class Exception extends Error {
         return this.toPlan();
     }
 
-    private static parsers: Array<(err:IException) => Exception | false> = [];
+    private static parsers: Array<(err: IException) => Exception | false> = [];
 
-
+    static addParser(parser: (err: IException) => Exception | false) {
+        this.parsers.push(parser);
+    }
     static from(err: any, parser?: (err: IException) => Exception | false) {
         if (err instanceof Exception) {
             return err;
