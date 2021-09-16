@@ -40,6 +40,15 @@ export class Exception extends Error {
             return new Exception(err.name, err.message);
         }
 
+        for (let p of this.parsers) {
+            if (err && err.name && err.message) {
+                let e = p(err)
+                if (e instanceof Exception) {
+                    return e;
+                }
+            }
+        }
+
         if (err && err.name && err.message) {
             if (parser) {
                 let e = parser(err)
@@ -51,14 +60,7 @@ export class Exception extends Error {
         }
 
 
-        for (let p of this.parsers) {
-            if (err && err.name && err.message) {
-                let e = p(err)
-                if (e instanceof Exception) {
-                    return e;
-                }
-            }
-        }
+        
 
         console.error("-- not suported error handle --");
         console.error(err);

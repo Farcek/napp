@@ -27,4 +27,5 @@ export function ExceptionParser(err: IException) {
         return new ValidationException(err.message);
     }
 
+    return false;
 }

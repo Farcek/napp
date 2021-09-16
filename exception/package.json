@@ -1,6 +1,6 @@
 {
   "name": "@napp/exception",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "common exception. node application common library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
