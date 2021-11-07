@@ -34,6 +34,11 @@ export class ServerInstance<RES, PQ, PB> {
     get bodyMode() {
         return this.meta.bodyMode;
     }
+    check(q: PQ, b: PB) {
+        this.meta.checkQ(q);
+        this.meta.checkB(b);
+
+    }
     before(funcs: Array<IMiddleware>) {
         this.beforeFuncs = funcs;
         return this;
@@ -84,9 +89,11 @@ export class ServerAdapter {
     }
 
     private callAction(it: ServerInstance<any, any, any>, req: any, res: any, next: any) {
+
         if (it.actionFunc) {
             let q = this.qParam(it, req);
             let b = req.body;
+            it.check(q || {}, b || {});
             return it.actionFunc({ q, b }, { req, res })
                 .then(rsu => {
                     if (rsu instanceof DtiResponse) {
