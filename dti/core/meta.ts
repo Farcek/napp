@@ -23,10 +23,10 @@ export class Dti<RES, PQ, PB> {
         return '/' + name;
     }
     get queryMode() {
-        return this.opt.queryMode || 'base64'
+        return this.opt.queryMode || ''
     }
     get bodyMode() {
-        return this.opt.bodyMode || 'json'
+        return this.opt.bodyMode || ''
     }
 
     checkQ(q: PQ) {

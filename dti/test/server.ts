@@ -26,7 +26,7 @@ function setup() {
     let express: any = '';
     let app: any = '';
 
-    server.addNativeRoute((route: any) => {
+    server.setup((route: any) => {
         route.get('/', (req: any, res: any) => {
 
         })
