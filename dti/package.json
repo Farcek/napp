@@ -1,14 +1,12 @@
 {
   "name": "@napp/dti",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "data transaction interface core library",
-  "dependencies": {
-    "cpy": "^8.1.1",
+  "dependencies": {},
+  "devDependencies": {
     "cross-fetch": "^3.0.6",
-    "rimraf": "^3.0.2",
     "typescript": "^4.2.2"
   },
-  "devDependencies": {},
   "scripts": {
     "tsc": "tsc",
     "upversion": "npm version patch",
@@ -23,6 +21,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "farcek@gmail.com",
   "license": "ISC"
 }
