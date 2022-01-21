@@ -1,3 +1,10 @@
+export enum DtiMode {
+    QJson = 'qjson',
+    QStr = 'qstr',
+    BJson = 'bjson',
+    BForm = 'bform',
+}
+
 export interface Serializer<T> {
     encode: (param: T) => string;
     decode: (text: string) => T;
