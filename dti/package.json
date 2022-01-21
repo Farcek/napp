@@ -1,6 +1,6 @@
 {
   "name": "@napp/dti",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "data transaction interface core library",
   "dependencies": {},
   "devDependencies": {
@@ -10,7 +10,7 @@
   "scripts": {
     "tsc": "tsc",
     "upversion": "npm version patch",
-    "prebuild": "rimraf dist",
+    "prebuild": "npx rimraf dist",
     "build": "tsc -p tsconfig.json",
     "postbuild": "node build.mjs",
     "push:core": "cd dist/core & npm publish --access=public",
