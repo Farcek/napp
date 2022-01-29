@@ -89,25 +89,27 @@ export class ServerAdapter {
     }
 
     private callAction(it: ServerInstance<any, any, any>, req: any, res: any, next: any) {
-
-        if (it.actionFunc) {
-            let q = this.qParam(it, req);
-            let b = req.body;
-            it.check(q || {}, b || {});
-            return it.actionFunc({ q, b }, { req, res })
-                .then(rsu => {
-                    if (rsu instanceof DtiResponse) {
-                        if (rsu.handle) {
-                            return rsu.handle(res);
+        try {
+            if (it.actionFunc) {
+                let q = this.qParam(it, req);
+                let b = req.body;
+                it.check(q || {}, b || {});
+                return it.actionFunc({ q, b }, { req, res })
+                    .then(rsu => {
+                        if (rsu instanceof DtiResponse) {
+                            if (rsu.handle) {
+                                return rsu.handle(res);
+                            }
+                            return res.end();
                         }
-                        return res.end();
-                    }
-                    return res.json(rsu);
-                })
-                .catch(err => next(err));
+                        return res.json(rsu);
+                    })
+                    .catch(err => next(err));
+            }
+            throw new Error('not found action handle')
+        } catch (error) {
+            return next(error)
         }
-
-        return next(new Error('not found action handle'))
     }
 
     private getBodyParser(it: ServerInstance<any, any, any>) {
